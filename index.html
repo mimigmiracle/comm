@@ -59,7 +59,6 @@
 
         .content-body { padding: 0 20px; display: flex; flex-direction: column; gap: 20px; }
 
-        /* Lobby Cards */
         .lobby-card {
             background: var(--card-bg);
             border-radius: 20px;
@@ -97,7 +96,6 @@
             box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
             transition: transform 0.2s ease;
         }
-        .btn-pay:hover { transform: translateY(-2px); }
 
         .player-list { display: flex; flex-direction: column; gap: 8px; max-height: 180px; overflow-y: auto; }
         .player-card {
@@ -122,9 +120,7 @@
             font-weight: 700;
             cursor: pointer;
         }
-        .btn-eliminate:hover { background: var(--danger); color: white; }
 
-        /* Spotify-Style Download Banner */
         .download-section {
             background: linear-gradient(180deg, rgba(255, 215, 0, 0.08) 0%, rgba(15, 15, 15, 0.95) 100%);
             border: 1px solid rgba(255, 215, 0, 0.3);
@@ -137,21 +133,9 @@
             gap: 12px;
         }
 
-        .download-section h3 {
-            font-size: 18px;
-            font-weight: 800;
-            color: #ffffff;
-            line-height: 1.3;
-        }
+        .download-section h3 { font-size: 18px; font-weight: 800; color: #ffffff; }
+        .download-section p { font-size: 12px; color: var(--text-sub); max-width: 340px; }
 
-        .download-section p {
-            font-size: 12px;
-            color: var(--text-sub);
-            line-height: 1.5;
-            max-width: 340px;
-        }
-
-        /* Strict Side-By-Side Button Layout */
         .store-badge-container {
             display: flex;
             flex-direction: row;
@@ -163,32 +147,29 @@
 
         .badge-btn {
             background: #000000;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 215, 0, 0.4);
             border-radius: 12px;
-            padding: 12px 6px;
+            padding: 14px 6px;
             display: flex;
             align-items: center;
             color: #ffffff;
             cursor: pointer;
-            text-decoration: none;
-            flex: 1; /* Forces exact equal width side-by-side */
+            flex: 1;
             min-width: 0;
             justify-content: center;
             transition: all 0.2s ease;
             -webkit-tap-highlight-color: transparent;
         }
 
-        .badge-btn:hover, .badge-btn:active {
-            border-color: var(--accent-gold);
-            transform: translateY(-2px);
-            background: rgba(255, 215, 0, 0.08);
+        .badge-btn:active {
+            transform: scale(0.97);
+            background: rgba(255, 215, 0, 0.15);
         }
 
-        .badge-text { text-align: center; display: flex; flex-direction: column; align-items: center; width: 100%; }
-        .badge-text .small-sub { font-size: 9px; text-transform: uppercase; color: var(--text-sub); font-weight: 700; letter-spacing: 0.5px; white-space: nowrap; }
-        .badge-text .big-title { font-size: 12px; font-weight: 800; color: #ffffff; white-space: nowrap; margin-top: 2px; }
+        .badge-text { text-align: center; display: flex; flex-direction: column; align-items: center; width: 100%; pointer-events: none; }
+        .badge-text .small-sub { font-size: 9px; text-transform: uppercase; color: var(--text-sub); font-weight: 700; letter-spacing: 0.5px; }
+        .badge-text .big-title { font-size: 12px; font-weight: 800; color: #ffffff; margin-top: 2px; }
 
-        /* Game Rules Section */
         .info-card {
             background: rgba(255, 215, 0, 0.03);
             border: 1px dashed rgba(255, 215, 0, 0.3);
@@ -198,7 +179,7 @@
             flex-direction: column;
             gap: 12px;
         }
-        .info-card h4 { color: var(--accent-gold); font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .info-card h4 { color: var(--accent-gold); font-size: 15px; font-weight: 700; }
         .info-step { display: flex; gap: 12px; font-size: 13px; color: var(--text-sub); line-height: 1.5; }
         .step-num {
             background: var(--accent-gold);
@@ -212,10 +193,9 @@
             justify-content: center;
             font-size: 11px;
             flex-shrink: 0;
-            margin-top: 2px;
         }
 
-        /* Modal Overlay */
+        /* Modal Styles */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -238,7 +218,6 @@
             max-width: 400px;
             width: 100%;
             text-align: center;
-            box-shadow: 0 10px 40px rgba(255, 215, 0, 0.2);
         }
         .modal-box h3 { color: #ffd700; font-size: 18px; margin-bottom: 12px; font-weight: 800; }
         .modal-box p { color: #a1a1aa; font-size: 13px; margin-bottom: 20px; line-height: 1.6; text-align: left; }
@@ -247,16 +226,17 @@
 </head>
 <body>
 
-<!-- iOS Instructions Modal -->
+<!-- iOS / Apple Instructions Modal -->
 <div class="modal-overlay" id="ios-modal">
     <div class="modal-box">
         <h3>Add to Home Screen</h3>
         <p>
-            <b>Safari Users:</b><br>
-            1. Tap the <b>Share</b> button <span style="font-size:16px;">⎋</span> at the bottom bar.<br>
-            2. Scroll down and tap <b>Add to Home Screen</b>.<br><br>
-            <b>Chrome Users:</b><br>
-            1. Tap the <b>Share</b> icon <span style="font-size:16px;">⎋</span> at top right.<br>
+            <b>Apple iOS / macOS Instructions:</b><br><br>
+            <b>Safari:</b><br>
+            1. Tap the <b>Share</b> icon <span style="font-size:16px;">⎋</span> at the bottom/top bar.<br>
+            2. Scroll down & select <b>Add to Home Screen</b>.<br><br>
+            <b>Chrome on iPhone/iPad:</b><br>
+            1. Tap the <b>Share</b> icon <span style="font-size:16px;">⎋</span> next to the URL bar.<br>
             2. Tap <b>Add to Home Screen</b>.
         </p>
         <button class="btn-modal-close" id="ios-modal-close">Got It</button>
@@ -272,7 +252,7 @@
     </div>
 
     <div class="content-body">
-        <!-- LOBBY 1: ₦500k Tier -->
+        <!-- LOBBY 1 -->
         <div class="lobby-card">
             <div class="lobby-header">
                 <div class="lobby-title">🏆 ₦500k Grand Battle</div>
@@ -282,7 +262,7 @@
             <div class="player-list" id="list-1000"></div>
         </div>
 
-        <!-- LOBBY 2: ₦50k Tier -->
+        <!-- LOBBY 2 -->
         <div class="lobby-card">
             <div class="lobby-header">
                 <div class="lobby-title">⚡ ₦50k Sprint Battle</div>
@@ -292,7 +272,7 @@
             <div class="player-list" id="list-100"></div>
         </div>
 
-        <!-- SIDE-BY-SIDE DOWNLOAD BANNER -->
+        <!-- DOWNLOAD BANNER -->
         <div class="download-section">
             <h3>Get the Whats Survival App</h3>
             <p>Install the app for instant lobby access, quick payments, and real-time tournament updates.</p>
@@ -306,13 +286,13 @@
                 <button class="badge-btn" id="badge-ios" type="button">
                     <div class="badge-text">
                         <span class="small-sub">ADD TO</span>
-                        <span class="big-title">iPhone / iPad</span>
+                        <span class="big-title">iPhone / iPad / Mac</span>
                     </div>
                 </button>
             </div>
         </div>
 
-        <!-- HOW TO PLAY / GAME RULES SECTION -->
+        <!-- GAME RULES -->
         <div class="info-card">
             <h4>📖 How Whats Survival Works</h4>
             <div class="info-step">
@@ -338,48 +318,46 @@
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js').catch(err => console.log('SW reg error:', err));
+        navigator.serviceWorker.register('sw.js').catch(err => console.log('SW Registration:', err));
     }
-
-    const iosModal = document.getElementById('ios-modal');
-    const iosModalClose = document.getElementById('ios-modal-close');
-    const badgeAndroid = document.getElementById('badge-android');
-    const badgeIos = document.getElementById('badge-ios');
 
     let deferredPrompt = null;
 
-    // Capture native PWA install prompt
+    // Capture native PWA install prompt when browser triggers it
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
     });
 
-    // Android / PC Install Trigger
-    badgeAndroid.addEventListener('click', async () => {
+    // 1. Android / PC Button Click Logic
+    document.getElementById('badge-android').addEventListener('click', async () => {
         if (deferredPrompt) {
             deferredPrompt.prompt();
             const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') deferredPrompt = null;
+            if (outcome === 'accepted') {
+                deferredPrompt = null;
+            }
         } else {
-            alert('To Install on Android or PC:\n\n1. Tap the browser menu (⋮)\n2. Select "Add to Home screen" or "Install App"');
+            // If native prompt isn't ready or supported, show clear manual install steps
+            alert("To Install on Android / PC:\n\n1. Tap your browser menu (3 dots ⋮ at top-right or bottom).\n2. Tap 'Add to Home screen' or 'Install App'.");
         }
     });
 
-    // iOS Install Trigger
-    badgeIos.addEventListener('click', () => {
-        iosModal.style.display = 'flex';
+    // 2. iPhone / iPad / Mac Button Click Logic (Always opens Modal Instructions)
+    document.getElementById('badge-ios').addEventListener('click', () => {
+        document.getElementById('ios-modal').style.display = 'flex';
     });
 
-    iosModalClose.addEventListener('click', () => {
-        iosModal.style.display = 'none';
+    document.getElementById('ios-modal-close').addEventListener('click', () => {
+        document.getElementById('ios-modal').style.display = 'none';
     });
 
-    // Hide download banner if app is already running as installed standalone app
+    // Hide banner if app is already installed & running standalone
     if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
         document.querySelector('.download-section').style.display = 'none';
     }
 
-    // Payment Return & Lobby Sync Logic
+    // Database / Roster Functions
     const urlParams = new URLSearchParams(window.location.search);
     const reference = urlParams.get('reference');
     const tierParam = urlParams.get('tier') || '1000';
