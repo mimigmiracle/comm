@@ -195,7 +195,7 @@
             flex-shrink: 0;
         }
 
-        /* Modal Styles */
+        /* Shared Modal Styles */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -240,6 +240,20 @@
             2. Tap <b>Add to Home Screen</b>.
         </p>
         <button class="btn-modal-close" id="ios-modal-close">Got It</button>
+    </div>
+</div>
+
+<!-- Android Fallback Modal -->
+<div class="modal-overlay" id="android-modal">
+    <div class="modal-box">
+        <h3>Install App</h3>
+        <p>
+            <b>To install Whats Survival on Android or PC:</b><br><br>
+            1. Tap your browser menu icon (<b>3 dots ⋮</b> at top-right or bottom).<br>
+            2. Select <b>Add to Home screen</b> or <b>Install App</b>.<br>
+            3. Tap <b>Add</b> to place the app on your home screen.
+        </p>
+        <button class="btn-modal-close" id="android-modal-close">Got It</button>
     </div>
 </div>
 
@@ -323,13 +337,13 @@
 
     let deferredPrompt = null;
 
-    // Capture native PWA install prompt when browser triggers it
+    // Capture native PWA install prompt when Chrome/Android fires it
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
     });
 
-    // 1. Android / PC Button Click Logic
+    // Android / PC Installation Logic
     document.getElementById('badge-android').addEventListener('click', async () => {
         if (deferredPrompt) {
             deferredPrompt.prompt();
@@ -338,12 +352,16 @@
                 deferredPrompt = null;
             }
         } else {
-            // If native prompt isn't ready or supported, show clear manual install steps
-            alert("To Install on Android / PC:\n\n1. Tap your browser menu (3 dots ⋮ at top-right or bottom).\n2. Tap 'Add to Home screen' or 'Install App'.");
+            // Show custom modal instructions if browser prompt isn't directly triggered
+            document.getElementById('android-modal').style.display = 'flex';
         }
     });
 
-    // 2. iPhone / iPad / Mac Button Click Logic (Always opens Modal Instructions)
+    document.getElementById('android-modal-close').addEventListener('click', () => {
+        document.getElementById('android-modal').style.display = 'none';
+    });
+
+    // iPhone / iPad / Mac Modal Trigger
     document.getElementById('badge-ios').addEventListener('click', () => {
         document.getElementById('ios-modal').style.display = 'flex';
     });
@@ -352,12 +370,12 @@
         document.getElementById('ios-modal').style.display = 'none';
     });
 
-    // Hide banner if app is already installed & running standalone
+    // Hide download section completely if launched from home screen as installed app
     if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
         document.querySelector('.download-section').style.display = 'none';
     }
 
-    // Database / Roster Functions
+    // Database & Lobby Sync Logic
     const urlParams = new URLSearchParams(window.location.search);
     const reference = urlParams.get('reference');
     const tierParam = urlParams.get('tier') || '1000';
