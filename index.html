@@ -331,17 +331,24 @@
     const SUPABASE_KEY = 'sb_publishable_PjtLrDn-bHNoz9hm5FM_yQ_LI8NUxrU';
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+    // 1. Service Worker Registration
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js').catch(err => console.log('SW Registration:', err));
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js')
+                .then(reg => console.log('SW registered scope:', reg.scope))
+                .catch(err => console.error('SW registration failed:', err));
+        });
     }
 
     let deferredPrompt = null;
 
+    // 2. Capture Chrome/Android install prompt
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
     });
 
+    // 3. Android / PC Install Click Listener
     document.getElementById('badge-android').addEventListener('click', async () => {
         if (deferredPrompt) {
             deferredPrompt.prompt();
@@ -354,6 +361,7 @@
         }
     });
 
+    // 4. Modal Handlers
     document.getElementById('android-modal-close').addEventListener('click', () => {
         document.getElementById('android-modal').style.display = 'none';
     });
@@ -366,10 +374,12 @@
         document.getElementById('ios-modal').style.display = 'none';
     });
 
+    // 5. Standalone mode check
     if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
         document.querySelector('.download-section').style.display = 'none';
     }
 
+    // 6. Supabase Logic
     const urlParams = new URLSearchParams(window.location.search);
     const reference = urlParams.get('reference');
     const tierParam = urlParams.get('tier') || '1000';
