@@ -218,8 +218,10 @@
 
         if (error) return;
 
-        const players1000 = players.filter(p => p.tier === '1000' || !p.tier);
-        const players100 = players.filter(p => p.tier === '100');
+        // ₦1,000 lobby looks for '100000'
+        const players1000 = players.filter(p => p.tier === '100000' || p.tier === '10000' || p.tier === '1000');
+        // ₦100 lobby looks for '10000'
+        const players100 = players.filter(p => p.tier === '10000' || p.tier === '100');
 
         document.getElementById('count-1000').innerText = players1000.length;
         document.getElementById('count-100').innerText = players100.length;
