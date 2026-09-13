@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whats Survival | Dual Tournament Lobbies</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#ffd700">
+    <style>
+        :root {
+            --bg-dark: #000000;
+            --card-bg: rgba(15, 15, 15, 0.9);
+            --accent-gold: #ffd700;
+            --text-main: #ffffff;
+            --text-sub: #a1a1aa;
+            --danger: #ff4757;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image: radial-gradient(circle at 50% 0%, rgba(255, 215, 0, 0.06) 0%, transparent 60%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 10px;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 480px;
+            background: rgba(10, 10, 10, 0.95);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 30px rgba(255, 215, 0, 0.05);
+            backdrop-filter: blur(16px);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding-bottom: 20px;
+        }
+
+        .app-header {
+            padding: 20px;
+            background: #000000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand-title { font-size: 18px; font-weight: 800; color: #ffffff; }
+        .brand-status { font-size: 11px; color: var(--accent-gold); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+
+        .content-body { padding: 0 20px; display: flex; flex-direction: column; gap: 20px; }
+
+        .lobby-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 215, 0, 0.25);
+            padding: 20px;
+            position: relative;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .lobby-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+        .lobby-title { font-size: 16px; font-weight: 700; color: var(--accent-gold); }
+
+        .counter-badge {
+            background: rgba(255, 215, 0, 0.08);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            color: var(--accent-gold);
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .btn-pay {
+            display: block;
+            width: 100%;
+            text-align: center;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 14px;
+            text-decoration: none;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #ffd700, #cca600);
+            color: #000000;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+            transition: transform 0.2s ease;
+        }
+        .btn-pay:hover { transform: translateY(-2px); }
+
+        .player-list { display: flex; flex-direction: column; gap: 8px; max-height: 180px; overflow-y: auto; }
+        .player-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 10px 14px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: #ffffff;
+        }
+
+        .btn-eliminate {
+            background: rgba(255, 71, 87, 0.15);
+            border: 1px solid rgba(255, 71, 87, 0.4);
+            color: var(--danger);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .btn-eliminate:hover { background: var(--danger); color: white; }
+
+        /* Install UI Styles */
+        #top-install-btn {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            background: #ffd700;
+            color: #000;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+            z-index: 9999;
+            display: none;
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+        }
+
+        #install-popup, #ios-install-popup {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            max-width: 440px;
+            margin: 0 auto;
+            background: #111;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            padding: 20px;
+            border-radius: 16px;
+            z-index: 10000;
+            display: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            text-align: center;
+        }
+        #install-popup h3, #ios-install-popup h3 { color: #ffd700; margin-bottom: 8px; font-size: 16px; }
+        #install-popup p, #ios-install-popup p { color: #a1a1aa; font-size: 13px; margin-bottom: 16px; line-height: 1.5; }
+        .popup-actions { display: flex; gap: 10px; }
+        .btn-install-now { background: #ffd700; color: #000; border: none; padding: 10px; border-radius: 8px; font-weight: 700; flex: 1; cursor: pointer; }
+        .btn-cancel { background: rgba(255,255,255,0.1); color: #fff; border: none; padding: 10px; border-radius: 8px; font-weight: 600; flex: 1; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<!-- Top-right corner button -->
+<button id="top-install-btn">📲 Install App</button>
+
+<!-- Initial Popup Banner for Android/PC -->
+<div id="install-popup">
+    <h3>Install Whats Survival</h3>
+    <p>Add this app to your home screen for quick access to live tournament lobbies and fast updates.</p>
+    <div class="popup-actions">
+        <button class="btn-cancel" id="popup-cancel">Later</button>
+        <button class="btn-install-now" id="popup-install">Install Now</button>
+    </div>
+</div>
+
+<!-- Special Guide Popup for iOS / iPhone Users -->
+<div id="ios-install-popup">
+    <h3>Install on iPhone / iPad</h3>
+    <p>To install this app on your iOS device: tap the <b>Share</b> button <span style="font-size:16px;">⎋</span> at the bottom of Safari, then scroll down and select <b>Add to Home Screen</b>.</p>
+    <button class="btn-cancel" id="ios-popup-close" style="width:100%;">Got It</button>
+</div>
+
+<div class="app-container">
+    <div class="app-header">
+        <div>
+            <div class="brand-title">⚔️ Whats Survival</div>
+            <div class="brand-status">Live Elimination Arenas</div>
+        </div>
+    </div>
+
+    <div class="content-body">
+        <!-- LOBBY 1: ₦500k Tier -->
+        <div class="lobby-card">
+            <div class="lobby-header">
+                <div class="lobby-title">🏆 ₦500k Grand Battle</div>
+                <div class="counter-badge"><span id="count-1000">0</span> Paid & Waiting</div>
+            </div>
+            <a href="https://paystack.shop/pay/trr5o190ig" class="btn-pay">Pay ₦1,000 & Join Lobby</a>
+            <div class="player-list" id="list-1000"></div>
+        </div>
+
+        <!-- LOBBY 2: ₦50k Tier -->
+        <div class="lobby-card">
+            <div class="lobby-header">
+                <div class="lobby-title">⚡ ₦50k Sprint Battle</div>
+                <div class="counter-badge"><span id="count-100">0</span> Paid & Waiting</div>
+            </div>
+            <a href="https://paystack.shop/pay/4axl-x3e50" class="btn-pay">Pay ₦100 & Join Lobby</a>
+            <div class="player-list" id="list-100"></div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+    const SUPABASE_URL = 'https://eupaqmrilobhvmbpvpuw.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_PjtLrDn-bHNoz9hm5FM_yQ_LI8NUxrU';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // Register Service Worker for PWA installation capability
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js');
+    }
+
+    // UI elements
+    const installPopup = document.getElementById('install-popup');
+    const popupInstall = document.getElementById('popup-install');
+    const popupCancel = document.getElementById('popup-cancel');
+    const topInstallBtn = document.getElementById('top-install-btn');
+    const iosPopup = document.getElementById('ios-install-popup');
+    const iosCloseBtn = document.getElementById('ios-popup-close');
+
+    // Check if app is already running from Home Screen
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+
+    // iOS Detection Logic
+    const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+
+    if (!isStandalone) {
+        if (isIos) {
+            if (!sessionStorage.getItem('ios_prompt_dismissed')) {
+                setTimeout(() => {
+                    iosPopup.style.display = 'block';
+                }, 1200);
+            } else {
+                topInstallBtn.style.display = 'block';
+            }
+        }
+    }
+
+    iosCloseBtn.addEventListener('click', () => {
+        iosPopup.style.display = 'none';
+        sessionStorage.setItem('ios_prompt_dismissed', 'true');
+        topInstallBtn.style.display = 'block';
+    });
+
+    // Android / PC Prompt Logic
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        if (!isIos && !isStandalone) {
+            installPopup.style.display = 'block';
+        }
+    });
+
+    popupInstall.addEventListener('click', async () => {
+        installPopup.style.display = 'none';
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+                topInstallBtn.style.display = 'none';
+            }
+            deferredPrompt = null;
+        }
+    });
+
+    popupCancel.addEventListener('click', () => {
+        installPopup.style.display = 'none';
+        topInstallBtn.style.display = 'block';
+    });
+
+    topInstallBtn.addEventListener('click', () => {
+        if (isIos) {
+            iosPopup.style.display = 'block';
+        } else if (deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    topInstallBtn.style.display = 'none';
+                }
+                deferredPrompt = null;
+            });
+        }
+    });
+
+    // Automatically hide install options once app installation succeeds
+    window.addEventListener('appinstalled', () => {
+        installPopup.style.display = 'none';
+        topInstallBtn.style.display = 'none';
+        iosPopup.style.display = 'none';
+    });
+
+    // Payment Return & Lobby Logic
+    const urlParams = new URLSearchParams(window.location.search);
+    const reference = urlParams.get('reference');
+    const tierParam = urlParams.get('tier') || '1000';
+
+    async function handleReturn(ref, tier) {
+        if (!ref) return;
+        const { error } = await supabase
+            .from('leads')
+            .insert([{ payment_reference: ref, is_active: true, tier: tier, phone_number: 'Verified Player' }]);
+
+        if (!error) {
+            alert(`Payment Verified! Joined the ₦${tier === '1000' ? '500k' : '50k'} Lobby.`);
+        }
+        window.history.replaceState({}, document.title, window.location.pathname);
+        loadPlayers();
+    }
+
+    async function loadPlayers() {
+        const { data: players, error } = await supabase
+            .from('leads')
+            .select('*')
+            .eq('is_active', true);
+
+        if (error) return;
+
+        const players1000 = players.filter(p => p.tier === '1000' || !p.tier);
+        const players100 = players.filter(p => p.tier === '100');
+
+        document.getElementById('count-1000').innerText = players1000.length;
+        document.getElementById('count-100').innerText = players100.length;
+
+        renderRoster('list-1000', players1000);
+        renderRoster('list-100', players100);
+    }
+
+    function renderRoster(elementId, playerArray) {
+        const listDiv = document.getElementById(elementId);
+        listDiv.innerHTML = '';
+
+        if (playerArray.length === 0) {
+            listDiv.innerHTML = '<div style="color:#71717a; font-size:12px; padding:6px; text-align:center;">No active players in lobby.</div>';
+            return;
+        }
+
+        playerArray.forEach((player) => {
+            const item = document.createElement('div');
+            item.className = 'player-card';
+            item.innerHTML = `
+                <span>Player #${player.id}</span>
+                <button class="btn-eliminate" onclick="removePlayer(${player.id})">Eliminate</button>
+            `;
+            listDiv.appendChild(item);
+        });
+    }
+
+    async function removePlayer(id) {
+        const { error } = await supabase
+            .from('leads')
+            .update({ is_active: false })
+            .eq('id', id);
+
+        if (!error) loadPlayers();
+    }
+
+    handleReturn(reference, tierParam);
+    loadPlayers();
+    setInterval(loadPlayers, 4000);
+</script>
+
+</body>
+</html>
