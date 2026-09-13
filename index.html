@@ -195,7 +195,7 @@
             flex-shrink: 0;
         }
 
-        /* Shared Modal Styles */
+        /* Modal Styles */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -337,13 +337,11 @@
 
     let deferredPrompt = null;
 
-    // Capture native PWA install prompt when Chrome/Android fires it
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
     });
 
-    // Android / PC Installation Logic
     document.getElementById('badge-android').addEventListener('click', async () => {
         if (deferredPrompt) {
             deferredPrompt.prompt();
@@ -352,7 +350,6 @@
                 deferredPrompt = null;
             }
         } else {
-            // Show custom modal instructions if browser prompt isn't directly triggered
             document.getElementById('android-modal').style.display = 'flex';
         }
     });
@@ -361,7 +358,6 @@
         document.getElementById('android-modal').style.display = 'none';
     });
 
-    // iPhone / iPad / Mac Modal Trigger
     document.getElementById('badge-ios').addEventListener('click', () => {
         document.getElementById('ios-modal').style.display = 'flex';
     });
@@ -370,12 +366,10 @@
         document.getElementById('ios-modal').style.display = 'none';
     });
 
-    // Hide download section completely if launched from home screen as installed app
     if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
         document.querySelector('.download-section').style.display = 'none';
     }
 
-    // Database & Lobby Sync Logic
     const urlParams = new URLSearchParams(window.location.search);
     const reference = urlParams.get('reference');
     const tierParam = urlParams.get('tier') || '1000';
