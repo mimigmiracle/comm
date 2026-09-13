@@ -127,55 +127,6 @@
             cursor: pointer;
         }
 
-        .download-section {
-            background: linear-gradient(180deg, rgba(255, 215, 0, 0.08) 0%, rgba(15, 15, 15, 0.95) 100%);
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            border-radius: 20px;
-            padding: 20px 14px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .download-section h3 { font-size: 18px; font-weight: 800; color: #ffffff; }
-        .download-section p { font-size: 12px; color: var(--text-sub); max-width: 340px; }
-
-        .store-badge-container {
-            display: flex;
-            flex-direction: row;
-            gap: 10px;
-            width: 100%;
-            justify-content: center;
-            margin-top: 6px;
-        }
-
-        .badge-btn {
-            background: #000000;
-            border: 1px solid rgba(255, 215, 0, 0.4);
-            border-radius: 12px;
-            padding: 14px 6px;
-            display: flex;
-            align-items: center;
-            color: #ffffff;
-            cursor: pointer;
-            flex: 1;
-            min-width: 0;
-            justify-content: center;
-            transition: all 0.2s ease;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .badge-btn:active {
-            transform: scale(0.97);
-            background: rgba(255, 215, 0, 0.15);
-        }
-
-        .badge-text { text-align: center; display: flex; flex-direction: column; align-items: center; width: 100%; pointer-events: none; }
-        .badge-text .small-sub { font-size: 9px; text-transform: uppercase; color: var(--text-sub); font-weight: 700; letter-spacing: 0.5px; }
-        .badge-text .big-title { font-size: 12px; font-weight: 800; color: #ffffff; margin-top: 2px; }
-
         .info-card {
             background: rgba(255, 215, 0, 0.03);
             border: 1px dashed rgba(255, 215, 0, 0.3);
@@ -184,6 +135,7 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
+            margin-top: 4px;
         }
         .info-card h4 { color: var(--accent-gold); font-size: 15px; font-weight: 700; }
         .info-step { display: flex; gap: 12px; font-size: 13px; color: var(--text-sub); line-height: 1.5; }
@@ -200,68 +152,9 @@
             font-size: 11px;
             flex-shrink: 0;
         }
-
-        /* Modal Styles */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(8px);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 99999;
-            padding: 20px;
-        }
-        .modal-box {
-            background: #111111;
-            border: 1px solid rgba(255, 215, 0, 0.4);
-            border-radius: 20px;
-            padding: 24px;
-            max-width: 400px;
-            width: 100%;
-            text-align: center;
-        }
-        .modal-box h3 { color: #ffd700; font-size: 18px; margin-bottom: 12px; font-weight: 800; }
-        .modal-box p { color: #a1a1aa; font-size: 13px; margin-bottom: 20px; line-height: 1.6; text-align: left; }
-        .btn-modal-close { background: #ffd700; color: #000; border: none; padding: 12px; border-radius: 10px; font-weight: 800; width: 100%; cursor: pointer; font-size: 13px; }
     </style>
 </head>
 <body>
-
-<!-- iOS / Apple Instructions Modal -->
-<div class="modal-overlay" id="ios-modal">
-    <div class="modal-box">
-        <h3>Add to Home Screen</h3>
-        <p>
-            <b>Apple iOS / macOS Instructions:</b><br><br>
-            <b>Safari:</b><br>
-            1. Tap the <b>Share</b> icon <span style="font-size:16px;">⎋</span> at the bottom/top bar.<br>
-            2. Scroll down & select <b>Add to Home Screen</b>.<br><br>
-            <b>Chrome on iPhone/iPad:</b><br>
-            1. Tap the <b>Share</b> icon <span style="font-size:16px;">⎋</span> next to the URL bar.<br>
-            2. Tap <b>Add to Home Screen</b>.
-        </p>
-        <button class="btn-modal-close" id="ios-modal-close">Got It</button>
-    </div>
-</div>
-
-<!-- Android Fallback Modal -->
-<div class="modal-overlay" id="android-modal">
-    <div class="modal-box">
-        <h3>Install App</h3>
-        <p>
-            <b>To install Whats Survival on Android or PC:</b><br><br>
-            1. Tap your browser menu icon (<b>3 dots ⋮</b> at top-right or bottom).<br>
-            2. Select <b>Add to Home screen</b> or <b>Install App</b>.<br>
-            3. Tap <b>Add</b> to place the app on your home screen.
-        </p>
-        <button class="btn-modal-close" id="android-modal-close">Got It</button>
-    </div>
-</div>
 
 <div class="app-container">
     <div class="app-header">
@@ -292,26 +185,6 @@
             <div class="player-list" id="list-100"></div>
         </div>
 
-        <!-- DOWNLOAD BANNER -->
-        <div class="download-section">
-            <h3>Get the Whats Survival App</h3>
-            <p>Install the app for instant lobby access, quick payments, and real-time tournament updates.</p>
-            <div class="store-badge-container">
-                <button class="badge-btn" id="badge-android" type="button">
-                    <div class="badge-text">
-                        <span class="small-sub">INSTALL ON</span>
-                        <span class="big-title">Android / PC</span>
-                    </div>
-                </button>
-                <button class="badge-btn" id="badge-ios" type="button">
-                    <div class="badge-text">
-                        <span class="small-sub">ADD TO</span>
-                        <span class="big-title">iPhone / iPad / Mac</span>
-                    </div>
-                </button>
-            </div>
-        </div>
-
         <!-- GAME RULES -->
         <div class="info-card">
             <h4>📖 How Whats Survival Works</h4>
@@ -321,7 +194,7 @@
             </div>
             <div class="info-step">
                 <div class="step-num">2</div>
-                <div><b>Instant Verification:</b> Click the payment button to complete your entry fee via Paystack. Upon returning, your spot will be registered live in the arena lobby.</div>
+                <div><b>Instant Verification:</b> Complete your entry fee via Paystack. Our automated webhook handles registration in the background instantly.</div>
             </div>
             <div class="info-step">
                 <div class="step-num">3</div>
@@ -337,76 +210,7 @@
     const SUPABASE_KEY = 'sb_publishable_PjtLrDn-bHNoz9hm5FM_yQ_LI8NUxrU';
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // 1. Service Worker Registration
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js')
-                .then(reg => console.log('SW registered scope:', reg.scope))
-                .catch(err => console.error('SW registration failed:', err));
-        });
-    }
-
-    let deferredPrompt = null;
-
-    // 2. Capture Chrome/Android install prompt
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-    });
-
-    // 3. Android / PC Install Click Listener (Fixed)
-    document.getElementById('badge-android').addEventListener('click', async () => {
-        if (deferredPrompt) {
-            try {
-                await deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') {
-                    deferredPrompt = null;
-                }
-            } catch (err) {
-                document.getElementById('android-modal').style.display = 'flex';
-            }
-        } else {
-            document.getElementById('android-modal').style.display = 'flex';
-        }
-    });
-
-    // 4. Modal Handlers
-    document.getElementById('android-modal-close').addEventListener('click', () => {
-        document.getElementById('android-modal').style.display = 'none';
-    });
-
-    document.getElementById('badge-ios').addEventListener('click', () => {
-        document.getElementById('ios-modal').style.display = 'flex';
-    });
-
-    document.getElementById('ios-modal-close').addEventListener('click', () => {
-        document.getElementById('ios-modal').style.display = 'none';
-    });
-
-    // 5. Standalone mode check
-    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
-        document.querySelector('.download-section').style.display = 'none';
-    }
-
-    // 6. Supabase Logic
-    const urlParams = new URLSearchParams(window.location.search);
-    const reference = urlParams.get('reference');
-    const tierParam = urlParams.get('tier') || '1000';
-
-    async function handleReturn(ref, tier) {
-        if (!ref) return;
-        const { error } = await supabase
-            .from('leads')
-            .insert([{ payment_reference: ref, is_active: true, tier: tier, phone_number: 'Verified Player' }]);
-
-        if (!error) {
-            alert(`Payment Verified! Joined the ₦${tier === '1000' ? '500k' : '50k'} Lobby.`);
-        }
-        window.history.replaceState({}, document.title, window.location.pathname);
-        loadPlayers();
-    }
-
+    // Supabase Real-time / Polling Logic (fed automatically via n8n webhook)
     async function loadPlayers() {
         const { data: players, error } = await supabase
             .from('leads')
@@ -438,7 +242,7 @@
             const item = document.createElement('div');
             item.className = 'player-card';
             item.innerHTML = `
-                <span>Player #${player.id}</span>
+                <span>${player.phone_number || 'Player #' + player.id}</span>
                 <button class="btn-eliminate" onclick="removePlayer(${player.id})">Eliminate</button>
             `;
             listDiv.appendChild(item);
@@ -454,7 +258,6 @@
         if (!error) loadPlayers();
     }
 
-    handleReturn(reference, tierParam);
     loadPlayers();
     setInterval(loadPlayers, 4000);
 </script>
