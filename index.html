@@ -123,7 +123,34 @@
         }
         .btn-eliminate:hover { background: var(--danger); color: white; }
 
-        /* Install UI Styles */
+        /* Game Rules Section */
+        .info-card {
+            background: rgba(255, 215, 0, 0.03);
+            border: 1px dashed rgba(255, 215, 0, 0.3);
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .info-card h4 { color: var(--accent-gold); font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .info-step { display: flex; gap: 12px; font-size: 13px; color: var(--text-sub); line-height: 1.5; }
+        .step-num {
+            background: var(--accent-gold);
+            color: #000;
+            font-weight: 800;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        /* Top-Right Install Button */
         #top-install-btn {
             position: fixed;
             top: 15px;
@@ -136,54 +163,67 @@
             font-weight: 700;
             font-size: 12px;
             cursor: pointer;
-            z-index: 9999;
+            z-index: 999;
             display: none;
             box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
         }
 
-        #install-popup, #ios-install-popup {
+        /* Centered Full-Screen Modals */
+        .modal-overlay {
             position: fixed;
-            bottom: 20px;
-            left: 20px;
-            right: 20px;
-            max-width: 440px;
-            margin: 0 auto;
-            background: #111;
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            padding: 20px;
-            border-radius: 16px;
-            z-index: 10000;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
             display: none;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-            text-align: center;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            padding: 20px;
         }
-        #install-popup h3, #ios-install-popup h3 { color: #ffd700; margin-bottom: 8px; font-size: 16px; }
-        #install-popup p, #ios-install-popup p { color: #a1a1aa; font-size: 13px; margin-bottom: 16px; line-height: 1.5; }
+        .modal-box {
+            background: #111111;
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            border-radius: 20px;
+            padding: 24px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(255, 215, 0, 0.2);
+        }
+        .modal-box h3 { color: #ffd700; font-size: 18px; margin-bottom: 10px; font-weight: 800; }
+        .modal-box p { color: #a1a1aa; font-size: 13px; margin-bottom: 20px; line-height: 1.6; }
         .popup-actions { display: flex; gap: 10px; }
-        .btn-install-now { background: #ffd700; color: #000; border: none; padding: 10px; border-radius: 8px; font-weight: 700; flex: 1; cursor: pointer; }
-        .btn-cancel { background: rgba(255,255,255,0.1); color: #fff; border: none; padding: 10px; border-radius: 8px; font-weight: 600; flex: 1; cursor: pointer; }
+        .btn-install-now { background: #ffd700; color: #000; border: none; padding: 12px; border-radius: 10px; font-weight: 800; flex: 1; cursor: pointer; font-size: 13px; }
+        .btn-cancel { background: rgba(255,255,255,0.1); color: #fff; border: none; padding: 12px; border-radius: 10px; font-weight: 700; flex: 1; cursor: pointer; font-size: 13px; }
     </style>
 </head>
 <body>
 
-<!-- Top-right corner button -->
+<!-- Always Available Top-Right Install Button -->
 <button id="top-install-btn">📲 Install App</button>
 
-<!-- Initial Popup Banner for Android/PC -->
-<div id="install-popup">
-    <h3>Install Whats Survival</h3>
-    <p>Add this app to your home screen for quick access to live tournament lobbies and fast updates.</p>
-    <div class="popup-actions">
-        <button class="btn-cancel" id="popup-cancel">Later</button>
-        <button class="btn-install-now" id="popup-install">Install Now</button>
+<!-- Centered Android / PC Install Modal -->
+<div class="modal-overlay" id="android-modal">
+    <div class="modal-box">
+        <h3>📲 Install Whats Survival</h3>
+        <p>Install the app to your home screen for direct access to match lobbies, quick payments, and real-time tournament alerts.</p>
+        <div class="popup-actions">
+            <button class="btn-cancel" id="popup-cancel">Later</button>
+            <button class="btn-install-now" id="popup-install">Install Now</button>
+        </div>
     </div>
 </div>
 
-<!-- Special Guide Popup for iOS / iPhone Users -->
-<div id="ios-install-popup">
-    <h3>Install on iPhone / iPad</h3>
-    <p>To install this app on your iOS device: tap the <b>Share</b> button <span style="font-size:16px;">⎋</span> at the bottom of Safari, then scroll down and select <b>Add to Home Screen</b>.</p>
-    <button class="btn-cancel" id="ios-popup-close" style="width:100%;">Got It</button>
+<!-- Centered iOS Instructions Modal -->
+<div class="modal-overlay" id="ios-modal">
+    <div class="modal-box">
+        <h3>🍎 Install on iPhone / iPad</h3>
+        <p>To add Whats Survival to your Home Screen:<br><br>1. Tap the <b>Share</b> icon <span style="font-size:18px;">⎋</span> at the bottom of Safari.<br>2. Scroll down and select <b>Add to Home Screen</b>.</p>
+        <button class="btn-cancel" id="ios-popup-close" style="width:100%;">Got It</button>
+    </div>
 </div>
 
 <div class="app-container">
@@ -214,6 +254,23 @@
             <a href="https://paystack.shop/pay/4axl-x3e50" class="btn-pay">Pay ₦100 & Join Lobby</a>
             <div class="player-list" id="list-100"></div>
         </div>
+
+        <!-- HOW TO PLAY / GAME RULES EXPLANATION SECTION -->
+        <div class="info-card">
+            <h4>📖 How Whats Survival Works</h4>
+            <div class="info-step">
+                <div class="step-num">1</div>
+                <div><b>Choose Your Tier:</b> Select either the <b>₦500k Grand Battle</b> (₦1,000 entry) or the <b>₦50k Sprint Battle</b> (₦100 entry).</div>
+            </div>
+            <div class="info-step">
+                <div class="step-num">2</div>
+                <div><b>Instant Verification:</b> Click the payment button to complete your entry fee via Paystack. Upon returning, your spot will be registered live in the arena lobby.</div>
+            </div>
+            <div class="info-step">
+                <div class="step-num">3</div>
+                <div><b>Battle & Eliminate:</b> Once the lobby fills up, players enter the arena. Admin verifies matches live—eliminated players are removed instantly from the board until the final survivor claims the pool!</div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -223,55 +280,57 @@
     const SUPABASE_KEY = 'sb_publishable_PjtLrDn-bHNoz9hm5FM_yQ_LI8NUxrU';
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // Register Service Worker for PWA installation capability
+    // Register Service Worker
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js');
     }
 
     // UI elements
-    const installPopup = document.getElementById('install-popup');
+    const androidModal = document.getElementById('android-modal');
     const popupInstall = document.getElementById('popup-install');
     const popupCancel = document.getElementById('popup-cancel');
     const topInstallBtn = document.getElementById('top-install-btn');
-    const iosPopup = document.getElementById('ios-install-popup');
+    const iosModal = document.getElementById('ios-modal');
     const iosCloseBtn = document.getElementById('ios-popup-close');
 
     // Check if app is already running from Home Screen
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
 
-    // iOS Detection Logic
+    // Detect iOS devices
     const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
 
+    // Trigger Centered Popups on EVERY REFRESH (if not installed)
     if (!isStandalone) {
         if (isIos) {
-            if (!sessionStorage.getItem('ios_prompt_dismissed')) {
-                setTimeout(() => {
-                    iosPopup.style.display = 'block';
-                }, 1200);
-            } else {
-                topInstallBtn.style.display = 'block';
-            }
+            // Force center popup display on iOS every refresh
+            setTimeout(() => {
+                iosModal.style.display = 'flex';
+            }, 800);
+        } else {
+            // Always show the top-right button as fallback on Android/PC
+            topInstallBtn.style.display = 'block';
         }
     }
 
+    // Dismiss iOS Modal
     iosCloseBtn.addEventListener('click', () => {
-        iosPopup.style.display = 'none';
-        sessionStorage.setItem('ios_prompt_dismissed', 'true');
+        iosModal.style.display = 'none';
         topInstallBtn.style.display = 'block';
     });
 
-    // Android / PC Prompt Logic
+    // Handle Android / PC Native Install Trigger
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
         if (!isIos && !isStandalone) {
-            installPopup.style.display = 'block';
+            // Force centered modal popup on every refresh
+            androidModal.style.display = 'flex';
         }
     });
 
     popupInstall.addEventListener('click', async () => {
-        installPopup.style.display = 'none';
+        androidModal.style.display = 'none';
         if (deferredPrompt) {
             deferredPrompt.prompt();
             const { outcome } = await deferredPrompt.userChoice;
@@ -283,29 +342,26 @@
     });
 
     popupCancel.addEventListener('click', () => {
-        installPopup.style.display = 'none';
+        androidModal.style.display = 'none';
         topInstallBtn.style.display = 'block';
     });
 
+    // Top Right Button Click Event
     topInstallBtn.addEventListener('click', () => {
         if (isIos) {
-            iosPopup.style.display = 'block';
+            iosModal.style.display = 'flex';
         } else if (deferredPrompt) {
-            deferredPrompt.prompt();
-            deferredPrompt.userChoice.then((choiceResult) => {
-                if (choiceResult.outcome === 'accepted') {
-                    topInstallBtn.style.display = 'none';
-                }
-                deferredPrompt = null;
-            });
+            androidModal.style.display = 'flex';
+        } else {
+            alert('To install: Open your browser menu (⋮) and tap "Add to Home screen".');
         }
     });
 
     // Automatically hide install options once app installation succeeds
     window.addEventListener('appinstalled', () => {
-        installPopup.style.display = 'none';
+        androidModal.style.display = 'none';
         topInstallBtn.style.display = 'none';
-        iosPopup.style.display = 'none';
+        iosModal.style.display = 'none';
     });
 
     // Payment Return & Lobby Logic
