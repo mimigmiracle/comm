@@ -7,6 +7,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#ffd700">
+    <!-- Favicon & iOS App Icons -->
+    <link rel="icon" type="image/png" sizes="192x192" href="icon.png">
+    <link rel="apple-touch-icon" href="icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Whats Survival">
     <style>
         :root {
             --bg-dark: #000000;
@@ -348,13 +354,17 @@
         deferredPrompt = e;
     });
 
-    // 3. Android / PC Install Click Listener
+    // 3. Android / PC Install Click Listener (Fixed)
     document.getElementById('badge-android').addEventListener('click', async () => {
         if (deferredPrompt) {
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') {
-                deferredPrompt = null;
+            try {
+                await deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    deferredPrompt = null;
+                }
+            } catch (err) {
+                document.getElementById('android-modal').style.display = 'flex';
             }
         } else {
             document.getElementById('android-modal').style.display = 'flex';
