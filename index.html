@@ -208,11 +208,10 @@
 <script>
     const SUPABASE_URL = 'https://eupaqmrilobhvmbpvpuw.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_PjtLrDn-bHNoz9hm5FM_yQ_LI8NUxrU';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // Supabase Real-time / Polling Logic (fed automatically via n8n webhook)
     async function loadPlayers() {
-        const { data: players, error } = await supabase
+        const { data: players, error } = await dbClient
             .from('leads')
             .select('*')
             .eq('is_active', true);
@@ -250,7 +249,7 @@
     }
 
     async function removePlayer(id) {
-        const { error } = await supabase
+        const { error } = await dbClient
             .from('leads')
             .update({ is_active: false })
             .eq('id', id);
