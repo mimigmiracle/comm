@@ -1,20 +1,12 @@
-const CACHE_NAME = 'whats-survival-cache-v1';
-
-// Install Event
-self.addEventListener('install', (event) => {
+self.addEventListener('install', (e) => {
   self.skipWaiting();
 });
 
-// Activate Event
-self.addEventListener('activate', (event) => {
-  event.waitUntil(self.clients.claim());
+self.addEventListener('activate', (e) => {
+  return self.clients.claim();
 });
 
-// Network-first fetch handler satisfying PWA installability requirements
-self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    fetch(event.request).catch(() => {
-      return caches.match(event.request);
-    })
-  );
+self.addEventListener('fetch', (e) => {
+  // Basic fetch handler to satisfy PWA installability criteria
+  e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
 });
