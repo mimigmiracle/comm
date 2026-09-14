@@ -99,49 +99,49 @@
             flex-shrink: 0;
         }
 
-        .member-info { display: flex; flex-direction: column; flex-grow: 1; }
-        .member-phone { font-size: 15px; font-weight: 500; color: var(--wa-text); }
-        .member-tag { font-size: 11px; color: var(--wa-green); background: rgba(0,168,132,0.1); padding: 2px 6px; border-radius: 4px; width: fit-content; margin-top: 2px; }
+        .member-info { display: flex; flex-direction: column; flex-grow: 1; word-break: break-all; }
+        .member-phone { font-size: 14px; font-weight: 500; color: var(--wa-text); }
 
-        /* WINNER BANNER */
-        .winner-box {
-            background: rgba(0, 168, 132, 0.1);
-            border: 1px solid var(--wa-green);
-            border-radius: 12px;
-            margin: 20px 16px;
-            padding: 20px;
+        .winner-screen {
+            background: rgba(0, 168, 132, 0.08);
+            border: 2px solid var(--wa-green);
+            border-radius: 16px;
+            margin: 24px 16px;
+            padding: 24px 16px;
             text-align: center;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            align-items: center;
+            gap: 16px;
         }
 
-        .winner-title { color: var(--wa-green); font-weight: 700; font-size: 16px; }
-        .winner-phone { font-size: 16px; font-weight: 700; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; }
+        .trophy-icon { font-size: 50px; }
+        .winner-title { color: var(--wa-green); font-weight: 800; font-size: 20px; }
+        .winner-phone { font-size: 15px; font-weight: 700; background: #1f2c34; padding: 12px; border-radius: 10px; width: 100%; border: 1px solid var(--wa-divider); word-break: break-all; }
 
         .btn-claim {
             background: var(--wa-green);
             color: #000000;
             text-decoration: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-weight: 700;
+            padding: 14px;
+            border-radius: 10px;
+            font-weight: 800;
             font-size: 14px;
+            width: 100%;
             display: block;
+            box-shadow: 0 4px 12px rgba(0, 168, 132, 0.3);
         }
 
-        /* MODAL BACKDROP */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.75);
             display: none;
             justify-content: flex-end;
             flex-direction: column;
             z-index: 100;
         }
 
-        /* WHATSAPP BOTTOM SHEET MODAL */
         .sheet-card {
             background: #1f2c34;
             border-top-left-radius: 20px;
@@ -150,7 +150,7 @@
             display: flex;
             flex-direction: column;
             gap: 16px;
-            animation: slideUp 0.25s ease-out;
+            animation: slideUp 0.2s ease-out;
         }
 
         @keyframes slideUp {
@@ -178,38 +178,22 @@
             font-size: 30px;
         }
 
-        .sheet-phone { font-size: 17px; font-weight: 700; color: var(--wa-text); }
-
-        .sheet-actions-row {
-            display: flex;
-            justify-content: space-around;
-            padding: 8px 0;
-            border-bottom: 1px solid var(--wa-divider);
-        }
-
-        .action-icon-btn {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            color: var(--wa-green);
-            font-size: 12px;
-            cursor: pointer;
-        }
+        .sheet-phone { font-size: 15px; font-weight: 700; color: var(--wa-text); word-break: break-all; text-align: center; }
 
         .sheet-menu-item {
-            padding: 12px 0;
+            padding: 14px;
             font-size: 15px;
+            font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 12px;
+            justify-content: center;
+            gap: 10px;
             cursor: pointer;
-            color: var(--wa-text);
+            border-radius: 10px;
+            background: rgba(241, 92, 109, 0.1);
+            color: var(--wa-red);
         }
 
-        .sheet-menu-item.danger { color: var(--wa-red); }
-
-        /* CONFIRM DIALOG */
         .confirm-card {
             background: #1f2c34;
             border-top-left-radius: 20px;
@@ -226,20 +210,24 @@
         .btn-cancel { color: var(--wa-subtext); }
         .btn-remove { color: var(--wa-red); }
 
-        /* TOAST */
         .toast {
             position: fixed;
-            bottom: 20px;
+            bottom: 24px;
             left: 50%;
             transform: translateX(-50%);
             background: #202c33;
             color: var(--wa-text);
-            padding: 10px 16px;
+            padding: 12px 20px;
             border-radius: 20px;
-            font-size: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid var(--wa-divider);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
             display: none;
             z-index: 200;
+            text-align: center;
+            width: 85%;
+            max-width: 380px;
         }
     </style>
 </head>
@@ -265,7 +253,6 @@
     </div>
 </div>
 
-<!-- MODAL SHEET 1: MEMBER OPTIONS -->
 <div class="modal-overlay" id="option-modal" onclick="closeModals(event)">
     <div class="sheet-card" onclick="event.stopPropagation()">
         <div class="sheet-profile">
@@ -273,19 +260,12 @@
             <div class="sheet-phone" id="modal-phone">+234 ...</div>
         </div>
 
-        <div class="sheet-actions-row">
-            <div class="action-icon-btn">💬<span>Message</span></div>
-            <div class="action-icon-btn">📞<span>Voice</span></div>
-            <div class="action-icon-btn">📹<span>Video</span></div>
+        <div class="sheet-menu-item" onclick="openConfirmModal()">
+            ⛔ Remove from group
         </div>
-
-        <div class="sheet-menu-item">⭐ Make group admin</div>
-        <div class="sheet-menu-item">ℹ️ Info</div>
-        <div class="sheet-menu-item danger" onclick="openConfirmModal()">⛔ Remove from group</div>
     </div>
 </div>
 
-<!-- MODAL SHEET 2: CONFIRM REMOVAL -->
 <div class="modal-overlay" id="confirm-modal" onclick="closeModals(event)">
     <div class="confirm-card" onclick="event.stopPropagation()">
         <div class="confirm-text" id="confirm-text">Remove player from group?</div>
@@ -296,23 +276,28 @@
     </div>
 </div>
 
-<!-- BOTTOM TOAST -->
-<div class="toast" id="toast-msg">Player was removed from the group.</div>
+<div class="toast" id="toast-msg">Notification</div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+    const activePhone = localStorage.getItem('user_phone');
+    if (!activePhone) {
+        window.location.href = 'login.html';
+    }
+
     const SUPABASE_URL = 'https://eupaqmrilobhvmbpvpuw.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_PjtLrDn-bHNoz9hm5FM_yQ_LI8NUxrU';
     const dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     const WHATSAPP_NUMBER = "2348124427349";
 
-    // Read target tier from URL parameter: game.html?tier=100000 or game.html?tier=10000
     const urlParams = new URLSearchParams(window.location.search);
     const currentTier = urlParams.get('tier') || '10000';
 
     let selectedPlayerId = null;
     let selectedPlayerPhone = '';
+    let cooldownEndTime = 0; 
+    let isCurrentUserAlive = true; 
 
     const tierName = currentTier === '100000' ? '₦500k Grand Battle' : '₦50k Sprint Battle';
     document.getElementById('arena-title').innerText = `Whats Survival (${tierName})`;
@@ -336,26 +321,48 @@
 
         countMeta.innerText = `${players.length} members`;
 
-        // WINNER FLOW: 1 Survivor Left
+        isCurrentUserAlive = players.some(p => String(p.phone_number) === String(activePhone));
+
         if (players.length === 1) {
             const winner = players[0];
             const winnerPhone = winner.phone_number || `Player #${winner.id}`;
-            const msg = encodeURIComponent(`Hello! I won the ${tierName} on Whats Survival. My registered number is ${winnerPhone}. Please issue my cash prize!`);
+            const isWinner = String(activePhone) === String(winnerPhone);
 
             listDiv.style.display = 'none';
             winnerDiv.style.display = 'block';
-            winnerDiv.innerHTML = `
-                <div class="winner-box">
-                    <div class="winner-title">🎉 WINNER DECLARED! 🎉</div>
-                    <div class="winner-phone">👑 ${winnerPhone}</div>
-                    <div style="font-size: 12px; color: var(--wa-subtext);">Congratulations! You are the last survivor standing. Message admin to get paid immediately:</div>
-                    <a href="https://wa.me/${WHATSAPP_NUMBER}?text=${msg}" target="_blank" class="btn-claim">💬 Message Admin to Get Paid</a>
-                </div>
-            `;
+
+            if (isWinner) {
+                const msg = encodeURIComponent(`Hello Admin! I won the ${tierName} on Whats Survival. My registered number is +${winnerPhone}. Please issue my prize money!`);
+                winnerDiv.innerHTML = `
+                    <div class="winner-screen">
+                        <div class="trophy-icon">🏆</div>
+                        <div class="winner-title">YOU WON!</div>
+                        <div style="font-size: 13px; color: var(--wa-subtext);">You are the last remaining survivor:</div>
+                        <div class="winner-phone">👑 +${winnerPhone}</div>
+                        <div style="font-size: 12px; color: var(--wa-subtext); line-height: 1.5;">
+                            Congratulations! Message the admin on WhatsApp to receive your cash reward.
+                        </div>
+                        <a href="https://wa.me/${WHATSAPP_NUMBER}?text=${msg}" target="_blank" class="btn-claim">
+                            💬 Message Admin (+${WHATSAPP_NUMBER}) to Get Paid
+                        </a>
+                    </div>
+                `;
+            } else {
+                winnerDiv.innerHTML = `
+                    <div class="winner-screen" style="border-color: var(--wa-divider); background: rgba(255, 255, 255, 0.03);">
+                        <div class="trophy-icon">🎮</div>
+                        <div class="winner-title" style="color: var(--wa-text);">MATCH COMPLETED</div>
+                        <div style="font-size: 13px; color: var(--wa-subtext);">The last remaining survivor was:</div>
+                        <div class="winner-phone">👑 +${winnerPhone}</div>
+                        <div style="font-size: 12px; color: var(--wa-subtext); line-height: 1.5; margin-top: 8px;">
+                            This match has concluded. Only the winner has access to claim the reward.
+                        </div>
+                    </div>
+                `;
+            }
             return;
         }
 
-        // ACTIVE GAME LIST
         listDiv.style.display = 'flex';
         winnerDiv.style.display = 'none';
         listDiv.innerHTML = '';
@@ -373,24 +380,35 @@
             item.innerHTML = `
                 <div class="avatar">👤</div>
                 <div class="member-info">
-                    <div class="member-phone">${phoneStr}</div>
+                    <div class="member-phone">+${phoneStr}</div>
                 </div>
             `;
             listDiv.appendChild(item);
         });
     }
 
-    // MODAL HANDLERS
     function openOptionModal(id, phone) {
+        if (!isCurrentUserAlive) {
+            showToast("❌ You have already been eliminated from the group! All you can do is wait for the game to end.");
+            return;
+        }
+
+        const now = Date.now();
+        if (now < cooldownEndTime) {
+            const secondsLeft = Math.ceil((cooldownEndTime - now) / 1000);
+            showToast(`⏳ Cooldown active! Wait ${secondsLeft}s before removing another player.`);
+            return;
+        }
+
         selectedPlayerId = id;
         selectedPlayerPhone = phone;
-        document.getElementById('modal-phone').innerText = phone;
+        document.getElementById('modal-phone').innerText = `+${phone}`;
         document.getElementById('option-modal').style.display = 'flex';
     }
 
     function openConfirmModal() {
         document.getElementById('option-modal').style.display = 'none';
-        document.getElementById('confirm-text').innerText = `Remove ${selectedPlayerPhone} from this group?`;
+        document.getElementById('confirm-text').innerText = `Remove +${selectedPlayerPhone} from this group?`;
         document.getElementById('confirm-modal').style.display = 'flex';
     }
 
@@ -406,14 +424,14 @@
     async function executeRemoval() {
         closeConfirmModal();
 
-        // Update database to eliminate player
+        cooldownEndTime = Date.now() + 3000;
+
         await dbClient
             .from('leads')
             .update({ is_active: false })
             .eq('id', selectedPlayerId);
 
-        // Show WhatsApp toast message
-        showToast(`${selectedPlayerPhone} was removed from the group.`);
+        showToast(`+${selectedPlayerPhone} was removed from the group.`);
         fetchPlayers();
     }
 
@@ -421,11 +439,11 @@
         const toast = document.getElementById('toast-msg');
         toast.innerText = text;
         toast.style.display = 'block';
-        setTimeout(() => { toast.style.display = 'none'; }, 3000);
+        setTimeout(() => { toast.style.display = 'none'; }, 3500);
     }
 
     fetchPlayers();
-    setInterval(fetchPlayers, 4000);
+    setInterval(fetchPlayers, 3000);
 </script>
 
 </body>
