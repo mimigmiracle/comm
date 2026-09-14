@@ -3,250 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Whats Survival | Tournament Lobbies</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <title>Lobby - WhatsApp Survival</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-dark: #0b141a;
-            --card-bg: #111b21;
-            --accent-gold: #ffd700;
-            --text-main: #e9edef;
-            --text-sub: #8696a0;
-            --success: #00a884;
+            --wa-bg: #0b141a;
+            --wa-card: #111b21;
+            --wa-header: #202c33;
+            --wa-text: #e9edef;
+            --wa-subtext: #8696a0;
+            --wa-green: #00a884;
+            --wa-divider: #222d34;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
 
         body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
+            background-color: var(--wa-bg);
+            color: var(--wa-text);
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: center;
-            padding: 20px 10px;
         }
 
-        .app-container {
+        .wa-screen {
             width: 100%;
             max-width: 440px;
-            background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
+            background: var(--wa-card);
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
+            padding: 20px 16px;
             gap: 20px;
-            padding-bottom: 20px;
         }
 
-        .app-header {
-            padding: 20px;
-            background: #202c33;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        .user-bar {
+            background: var(--wa-header);
+            padding: 14px 16px;
+            border-radius: 12px;
             display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--wa-divider);
         }
 
-        .brand-title { font-size: 18px; font-weight: 800; color: #ffffff; }
-        .brand-status { font-size: 11px; color: var(--accent-gold); font-weight: 700; text-transform: uppercase; }
+        .user-phone { font-size: 14px; font-weight: 600; }
+        .logout-btn { color: #f15c6d; text-decoration: none; font-size: 13px; font-weight: 600; cursor: pointer; }
 
-        .content-body { padding: 0 16px; display: flex; flex-direction: column; gap: 16px; }
+        .section-title { font-size: 16px; font-weight: 700; margin-top: 10px; }
 
-        .lobby-card {
-            background: #182229;
-            border-radius: 16px;
-            border: 1px solid rgba(255, 215, 0, 0.2);
-            padding: 16px;
+        .tier-card {
+            background: var(--wa-header);
+            border: 1px solid var(--wa-divider);
+            border-radius: 14px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             gap: 12px;
+            text-decoration: none;
+            color: var(--wa-text);
+            transition: border-color 0.2s;
         }
 
-        .lobby-header { display: flex; justify-content: space-between; align-items: center; }
-        .lobby-title { font-size: 15px; font-weight: 700; color: var(--accent-gold); }
+        .tier-card:hover { border-color: var(--wa-green); }
 
-        .counter-badge {
-            background: rgba(255, 215, 0, 0.1);
-            color: var(--accent-gold);
+        .tier-badge {
+            align-self: flex-start;
+            background: rgba(0, 168, 132, 0.15);
+            color: var(--wa-green);
             padding: 4px 10px;
-            border-radius: 10px;
-            font-size: 12px;
+            border-radius: 20px;
+            font-size: 11px;
             font-weight: 700;
         }
 
-        .btn-pay, .btn-registered {
-            display: block;
-            width: 100%;
-            text-align: center;
-            padding: 12px;
-            border-radius: 10px;
-            font-weight: 800;
-            font-size: 13px;
-            text-decoration: none;
-        }
-
-        .btn-pay {
-            background: linear-gradient(135deg, #ffd700, #cca600);
-            color: #000000;
-        }
-
-        .btn-registered {
-            background: rgba(0, 168, 132, 0.15);
-            border: 1px solid var(--success);
-            color: var(--success);
-        }
-
-        .arena-action-box {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px dashed rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
+        .tier-name { font-size: 18px; font-weight: 700; }
+        .tier-desc { font-size: 12px; color: var(--wa-subtext); }
+        .btn-enter {
+            background: var(--wa-green);
+            color: #000;
             padding: 10px;
+            border-radius: 8px;
             text-align: center;
-        }
-
-        .countdown-text { font-size: 12px; color: var(--text-sub); }
-        .countdown-text span { color: var(--accent-gold); font-weight: 800; }
-
-        .btn-play-game {
-            display: none;
-            width: 100%;
-            text-align: center;
-            padding: 12px;
-            border-radius: 10px;
-            font-weight: 800;
+            font-weight: 700;
             font-size: 13px;
-            text-decoration: none;
-            background: var(--success);
-            color: #000000;
+            margin-top: 4px;
         }
     </style>
 </head>
 <body>
 
-<div class="app-container">
-    <div class="app-header">
+<div class="wa-screen">
+    <div class="user-bar">
         <div>
-            <div class="brand-title">⚔️ Whats Survival</div>
-            <div class="brand-status">Select Arena</div>
+            <div style="font-size: 11px; color: var(--wa-subtext);">Logged in as</div>
+            <div class="user-phone" id="display-phone">+234 ...</div>
         </div>
+        <div class="logout-btn" onclick="logout()">Logout</div>
     </div>
 
-    <div class="content-body">
-        <!-- ₦1,000 LOBBY CARD -->
-        <div class="lobby-card">
-            <div class="lobby-header">
-                <div class="lobby-title">🏆 ₦500k Grand Battle (₦1,000)</div>
-                <div class="counter-badge"><span id="count-1000">0</span> Registered</div>
-            </div>
-            
-            <a href="https://paystack.shop/pay/trr5o190ig" class="btn-pay" id="pay-btn-1000">Pay ₦1,000 & Join Lobby</a>
-            <div class="btn-registered" id="paid-badge-1000" style="display:none;">✅ Registered! Starts at 8:00 PM</div>
+    <div class="section-title">Select Battle Arena</div>
 
-            <div class="arena-action-box">
-                <div class="countdown-text" id="timer-box-1000">Starts in: <span id="time-1000">Loading...</span></div>
-                <!-- Links specifically to the 100000 tier room -->
-                <a href="game.html?tier=100000" class="btn-play-game" id="play-btn-1000">🎮 Enter ₦1,000 Arena</a>
-            </div>
-        </div>
+    <a href="game.html?tier=10000" class="tier-card">
+        <div class="tier-badge">FAST MATCH</div>
+        <div class="tier-name">₦50k Sprint Battle</div>
+        <div class="tier-desc">Standard survival mode. Last remaining player claims the prize pool.</div>
+        <div class="btn-enter">Enter Arena</div>
+    </a>
 
-        <!-- ₦100 LOBBY CARD -->
-        <div class="lobby-card">
-            <div class="lobby-header">
-                <div class="lobby-title">⚡ ₦50k Sprint Battle (₦100)</div>
-                <div class="counter-badge"><span id="count-100">0</span> Registered</div>
-            </div>
-            
-            <a href="https://paystack.shop/pay/4axl-x3e50" class="btn-pay" id="pay-btn-100">Pay ₦100 & Join Lobby</a>
-            <div class="btn-registered" id="paid-badge-100" style="display:none;">✅ Registered! Starts at 8:00 PM</div>
-
-            <div class="arena-action-box">
-                <div class="countdown-text" id="timer-box-100">Starts in: <span id="time-100">Loading...</span></div>
-                <!-- Links specifically to the 10000 tier room -->
-                <a href="game.html?tier=10000" class="btn-play-game" id="play-btn-100">🎮 Enter ₦100 Arena</a>
-            </div>
-        </div>
-    </div>
+    <a href="game.html?tier=100000" class="tier-card">
+        <div class="tier-badge" style="background: rgba(226, 160, 63, 0.15); color: #e2a03f;">GRAND MATCH</div>
+        <div class="tier-name">₦500k Grand Battle</div>
+        <div class="tier-desc">High stakes match. Outlast all opponents to reach the admin claim portal.</div>
+        <div class="btn-enter" style="background: #e2a03f;">Enter Arena</div>
+    </a>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-    const SUPABASE_URL = 'https://eupaqmrilobhvmbpvpuw.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_PjtLrDn-bHNoz9hm5FM_yQ_LI8NUxrU';
-    const dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('paid') === '1' || urlParams.get('status') === 'success') {
-        localStorage.setItem('has_paid_ws', 'true');
+    const activePhone = localStorage.getItem('user_phone');
+    if (!activePhone) {
+        window.location.href = 'login.html';
+    } else {
+        document.getElementById('display-phone').innerText = '+' + activePhone;
     }
 
-    function getNextMatchTime() {
-        const now = new Date();
-        const target = new Date();
-        target.setHours(20, 0, 0, 0);
-        if (now.getTime() > target.getTime()) {
-            target.setDate(target.getDate() + 1);
-        }
-        return target.getTime();
+    function logout() {
+        localStorage.removeItem('user_phone');
+        window.location.href = 'login.html';
     }
-
-    let targetTime = getNextMatchTime();
-
-    function updateCountdowns() {
-        const now = new Date().getTime();
-        const distance = targetTime - now;
-        const hasPaid = localStorage.getItem('has_paid_ws') === 'true';
-
-        if (distance <= 0) {
-            document.getElementById('timer-box-1000').style.display = 'none';
-            document.getElementById('timer-box-100').style.display = 'none';
-            document.getElementById('pay-btn-1000').style.display = 'none';
-            document.getElementById('pay-btn-100').style.display = 'none';
-            document.getElementById('paid-badge-1000').style.display = 'none';
-            document.getElementById('paid-badge-100').style.display = 'none';
-
-            document.getElementById('play-btn-1000').style.display = 'block';
-            document.getElementById('play-btn-100').style.display = 'block';
-        } else {
-            document.getElementById('play-btn-1000').style.display = 'none';
-            document.getElementById('play-btn-100').style.display = 'none';
-
-            if (hasPaid) {
-                document.getElementById('pay-btn-1000').style.display = 'none';
-                document.getElementById('pay-btn-100').style.display = 'none';
-                document.getElementById('paid-badge-1000').style.display = 'block';
-                document.getElementById('paid-badge-100').style.display = 'block';
-            }
-
-            const hours = Math.floor(distance / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            
-            const formatted = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            document.getElementById('time-1000').innerText = formatted;
-            document.getElementById('time-100').innerText = formatted;
-        }
-    }
-
-    setInterval(updateCountdowns, 1000);
-    updateCountdowns();
-
-    async function loadCounts() {
-        const { data: players } = await dbClient
-            .from('leads')
-            .select('*')
-            .eq('is_active', true);
-
-        if (players) {
-            document.getElementById('count-1000').innerText = players.filter(p => p.tier === '100000').length;
-            document.getElementById('count-100').innerText = players.filter(p => p.tier === '10000').length;
-        }
-    }
-
-    loadCounts();
-    setInterval(loadCounts, 4000);
 </script>
 
 </body>
