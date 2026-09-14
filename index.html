@@ -88,7 +88,9 @@
             font-weight: 800;
             font-size: 13px;
             text-decoration: none;
+            cursor: pointer;
             transition: all 0.2s ease;
+            border: none;
         }
 
         .btn-pay {
@@ -140,7 +142,7 @@
                 <div class="counter-badge"><span id="count-1000">0</span> Registered</div>
             </div>
             
-            <a href="https://paystack.shop/pay/trr5o190ig" class="btn-pay" id="pay-btn-1000">Pay ₦1,000 & Join Lobby</a>
+            <button class="btn-pay" id="pay-btn-1000" onclick="startPayment('100000', 'https://paystack.shop/pay/trr5o190ig')">Pay ₦1,000 & Join Lobby</button>
             <div class="btn-registered" id="paid-badge-1000" style="display:none;">✅ Registered! Starts at 8:00 PM</div>
 
             <div class="arena-action-box" id="timer-box-1000">
@@ -157,7 +159,7 @@
                 <div class="counter-badge"><span id="count-100">0</span> Registered</div>
             </div>
             
-            <a href="https://paystack.shop/pay/4axl-x3e50" class="btn-pay" id="pay-btn-100">Pay ₦100 & Join Lobby</a>
+            <button class="btn-pay" id="pay-btn-100" onclick="startPayment('10000', 'https://paystack.shop/pay/4axl-x3e50')">Pay ₦100 & Join Lobby</button>
             <div class="btn-registered" id="paid-badge-100" style="display:none;">✅ Registered! Starts at 8:00 PM</div>
 
             <div class="arena-action-box" id="timer-box-100">
@@ -187,57 +189,72 @@
     const SUPABASE_KEY = 'sb_publishable_PjtLrDn-bHNoz9hm5FM_yQ_LI8NUxrU';
     const dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // 1. Process Paystack Return Redirects
-    const urlParams = new URLSearchParams(window.location.search);
-    const returnedTier = urlParams.get('tier');
+    // Save pending tier state before redirecting to Paystack
+    function startPayment(tier, url) {
+        localStorage.setItem('pending_payment_tier', tier);
+        window.location.href = url;
+    }
 
-    if (urlParams.get('paid') === 'true' && returnedTier) {
-        localStorage.setItem(`paid_tier_${returnedTier}`, 'true');
+    // 1. Process Return from Paystack
+    const urlParams = new URLSearchParams(window.location.search);
+    const reference = urlParams.get('reference') || urlParams.get('trxref');
+    const returnedTier = urlParams.get('tier');
+    const pendingTier = localStorage.getItem('pending_payment_tier');
+
+    const finalTier = returnedTier || pendingTier;
+
+    if ((reference || urlParams.get('paid') === 'true') && finalTier) {
+        const todayStr = new Date().toISOString().split('T')[0];
+        localStorage.setItem(`paid_tier_${finalTier}`, todayStr);
+        localStorage.removeItem('pending_payment_tier');
         
-        // Record participant in Supabase leads table
-        dbClient.from('leads').upsert([
-            { phone_number: activePhone, tier: returnedTier, is_active: true }
-        ]).then(() => {
-            // Clean up address bar parameters without reloading
+        // Save lead and attach payment reference
+        dbClient.from('leads').upsert(
+            [{ 
+                phone_number: activePhone, 
+                tier: finalTier, 
+                is_active: true,
+                payment_reference: reference || null
+            }],
+            { onConflict: 'phone_number,tier' }
+        ).then(() => {
             window.history.replaceState({}, document.title, window.location.pathname);
+            updateStateEngine();
         });
     }
 
-    // 2. Cross-device sync: Query Supabase to auto-unlock paid tiers
+    // 2. Cross-device sync: Query Supabase ONLY for verified payments
     async function syncDatabasePaidStatus() {
         if (!activePhone) return;
         const { data: userLeads } = await dbClient
             .from('leads')
             .select('tier')
             .eq('phone_number', activePhone)
-            .eq('is_active', true);
+            .eq('is_active', true)
+            .not('payment_reference', 'is', null);
 
         if (userLeads && userLeads.length > 0) {
+            const todayStr = new Date().toISOString().split('T')[0];
             userLeads.forEach(lead => {
-                localStorage.setItem(`paid_tier_${lead.tier}`, 'true');
+                localStorage.setItem(`paid_tier_${lead.tier}`, todayStr);
             });
             updateStateEngine();
         }
     }
 
-    // 3. State & Timer Engine (Controls 3-step button changes per tier)
+    // 3. State & Countdown Engine (Controls button visibility & time logic)
     function updateStateEngine() {
         const now = new Date();
         const currentHour = now.getHours();
+        const todayStr = now.toISOString().split('T')[0];
 
         // Game active strictly between 8:00 PM (20:00) and 9:00 PM (21:00)
         const isMatchActive = (currentHour >= 20 && currentHour < 21);
 
-        // Reset paid access automatically after 9 PM match concludes
-        if (currentHour >= 21) {
-            localStorage.removeItem('paid_tier_100000');
-            localStorage.removeItem('paid_tier_10000');
-        }
-
-        // Calculate 8:00 PM target
+        // Calculate target time for countdown (8:00 PM)
         const target = new Date();
         target.setHours(20, 0, 0, 0);
-        if (now.getTime() > target.getTime() && currentHour >= 21) {
+        if (currentHour >= 21) {
             target.setDate(target.getDate() + 1);
         }
 
@@ -261,7 +278,15 @@
         ];
 
         tiers.forEach(t => {
-            const isPaid = localStorage.getItem(`paid_tier_${t.dbTier}`) === 'true';
+            const paidDate = localStorage.getItem(`paid_tier_${t.dbTier}`);
+            
+            let isPaid = false;
+            if (paidDate === todayStr) {
+                isPaid = true;
+            } else if (paidDate && paidDate !== todayStr && currentHour >= 21) {
+                // Clear past session data safely after 9 PM
+                localStorage.removeItem(`paid_tier_${t.dbTier}`);
+            }
 
             const payBtn = document.getElementById(`pay-btn-${t.id}`);
             const paidBadge = document.getElementById(`paid-badge-${t.id}`);
@@ -290,17 +315,23 @@
         });
     }
 
-    // 4. Load live active player counts
+    // 4. Load live player counts (only counting completed payments)
     async function loadCounts() {
-        const { data: players } = await dbClient
-            .from('leads')
-            .select('*')
-            .eq('is_active', true);
+        const [c1000, c100] = await Promise.all([
+            dbClient.from('leads')
+                .select('*', { count: 'exact', head: true })
+                .eq('tier', '100000')
+                .eq('is_active', true)
+                .not('payment_reference', 'is', null),
+            dbClient.from('leads')
+                .select('*', { count: 'exact', head: true })
+                .eq('tier', '10000')
+                .eq('is_active', true)
+                .not('payment_reference', 'is', null)
+        ]);
 
-        if (players) {
-            document.getElementById('count-1000').innerText = players.filter(p => p.tier === '100000').length;
-            document.getElementById('count-100').innerText = players.filter(p => p.tier === '10000').length;
-        }
+        if (c1000.count !== null) document.getElementById('count-1000').innerText = c1000.count;
+        if (c100.count !== null) document.getElementById('count-100').innerText = c100.count;
     }
 
     // Execution Loops
@@ -309,7 +340,7 @@
     loadCounts();
 
     setInterval(updateStateEngine, 1000);
-    setInterval(loadCounts, 4000);
+    setInterval(loadCounts, 5000);
 </script>
 
 </body>
