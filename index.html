@@ -3,122 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lobby - WhatsApp Survival</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Whats Survival | Tournament Lobbies</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --wa-bg: #0b141a;
-            --wa-card: #111b21;
-            --wa-header: #202c33;
-            --wa-text: #e9edef;
-            --wa-subtext: #8696a0;
-            --wa-green: #00a884;
-            --wa-divider: #222d34;
+            --bg-dark: #0b141a;
+            --card-bg: #111b21;
+            --accent-gold: #ffd700;
+            --text-main: #e9edef;
+            --text-sub: #8696a0;
+            --success: #00a884;
+            --wa-red: #f15c6d;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
 
         body {
-            background-color: var(--wa-bg);
-            color: var(--wa-text);
+            background-color: var(--bg-dark);
+            color: var(--text-main);
             min-height: 100vh;
             display: flex;
             justify-content: center;
+            align-items: center;
+            padding: 20px 10px;
         }
 
-        .wa-screen {
+        .app-container {
             width: 100%;
             max-width: 440px;
-            background: var(--wa-card);
-            min-height: 100vh;
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
             display: flex;
             flex-direction: column;
-            padding: 20px 16px;
             gap: 20px;
+            padding-bottom: 20px;
         }
 
-        .user-bar {
-            background: var(--wa-header);
-            padding: 14px 16px;
-            border-radius: 12px;
+        .app-header {
+            padding: 16px 20px;
+            background: #202c33;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            border: 1px solid var(--wa-divider);
+            justify-content: space-between;
         }
 
-        .user-phone { font-size: 14px; font-weight: 600; }
-        .logout-btn { color: #f15c6d; text-decoration: none; font-size: 13px; font-weight: 600; cursor: pointer; }
+        .brand-title { font-size: 18px; font-weight: 800; color: #ffffff; }
+        .user-phone { font-size: 12px; color: var(--text-sub); }
+        .logout-btn { color: var(--wa-red); font-size: 12px; font-weight: 700; text-decoration: none; cursor: pointer; }
 
-        .section-title { font-size: 16px; font-weight: 700; margin-top: 10px; }
+        .content-body { padding: 0 16px; display: flex; flex-direction: column; gap: 16px; }
 
-        .tier-card {
-            background: var(--wa-header);
-            border: 1px solid var(--wa-divider);
-            border-radius: 14px;
-            padding: 20px;
+        .lobby-card {
+            background: #182229;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            padding: 16px;
             display: flex;
             flex-direction: column;
             gap: 12px;
-            text-decoration: none;
-            color: var(--wa-text);
-            transition: border-color 0.2s;
         }
 
-        .tier-card:hover { border-color: var(--wa-green); }
+        .lobby-header { display: flex; justify-content: space-between; align-items: center; }
+        .lobby-title { font-size: 15px; font-weight: 700; color: var(--accent-gold); }
 
-        .tier-badge {
-            align-self: flex-start;
-            background: rgba(0, 168, 132, 0.15);
-            color: var(--wa-green);
+        .counter-badge {
+            background: rgba(255, 215, 0, 0.1);
+            color: var(--accent-gold);
             padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 11px;
+            border-radius: 10px;
+            font-size: 12px;
             font-weight: 700;
         }
 
-        .tier-name { font-size: 18px; font-weight: 700; }
-        .tier-desc { font-size: 12px; color: var(--wa-subtext); }
-        .btn-enter {
-            background: var(--wa-green);
-            color: #000;
-            padding: 10px;
-            border-radius: 8px;
+        .btn-pay, .btn-registered, .btn-play-game {
+            display: block;
+            width: 100%;
             text-align: center;
-            font-weight: 700;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 800;
             font-size: 13px;
-            margin-top: 4px;
+            text-decoration: none;
+            transition: all 0.2s ease;
         }
+
+        .btn-pay {
+            background: linear-gradient(135deg, #ffd700, #cca600);
+            color: #000000;
+        }
+
+        .btn-registered {
+            background: rgba(0, 168, 132, 0.15);
+            border: 1px solid var(--success);
+            color: var(--success);
+            cursor: not-allowed;
+        }
+
+        .btn-play-game {
+            background: var(--success);
+            color: #000000;
+            box-shadow: 0 4px 12px rgba(0, 168, 132, 0.4);
+        }
+
+        .arena-action-box {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .countdown-text { font-size: 12px; color: var(--text-sub); }
+        .countdown-text span { color: var(--accent-gold); font-weight: 800; }
     </style>
 </head>
 <body>
 
-<div class="wa-screen">
-    <div class="user-bar">
+<div class="app-container">
+    <div class="app-header">
         <div>
-            <div style="font-size: 11px; color: var(--wa-subtext);">Logged in as</div>
+            <div class="brand-title">⚔️ Whats Survival</div>
             <div class="user-phone" id="display-phone">+234 ...</div>
         </div>
         <div class="logout-btn" onclick="logout()">Logout</div>
     </div>
 
-    <div class="section-title">Select Battle Arena</div>
+    <div class="content-body">
+        <!-- ₦1,000 LOBBY CARD -->
+        <div class="lobby-card">
+            <div class="lobby-header">
+                <div class="lobby-title">🏆 ₦500k Grand Battle (₦1,000)</div>
+                <div class="counter-badge"><span id="count-1000">0</span> Registered</div>
+            </div>
+            
+            <a href="https://paystack.shop/pay/trr5o190ig" class="btn-pay" id="pay-btn-1000">Pay ₦1,000 & Join Lobby</a>
+            <div class="btn-registered" id="paid-badge-1000" style="display:none;">✅ Registered! Starts at 8:00 PM</div>
 
-    <a href="game.html?tier=10000" class="tier-card">
-        <div class="tier-badge">FAST MATCH</div>
-        <div class="tier-name">₦50k Sprint Battle</div>
-        <div class="tier-desc">Standard survival mode. Last remaining player claims the prize pool.</div>
-        <div class="btn-enter">Enter Arena</div>
-    </a>
+            <div class="arena-action-box" id="timer-box-1000">
+                <div class="countdown-text">Starts in: <span id="time-1000">Loading...</span></div>
+            </div>
 
-    <a href="game.html?tier=100000" class="tier-card">
-        <div class="tier-badge" style="background: rgba(226, 160, 63, 0.15); color: #e2a03f;">GRAND MATCH</div>
-        <div class="tier-name">₦500k Grand Battle</div>
-        <div class="tier-desc">High stakes match. Outlast all opponents to reach the admin claim portal.</div>
-        <div class="btn-enter" style="background: #e2a03f;">Enter Arena</div>
-    </a>
+            <a href="game.html?tier=100000" class="btn-play-game" id="play-btn-1000" style="display:none;">🎮 Enter ₦1,000 Arena</a>
+        </div>
+
+        <!-- ₦100 LOBBY CARD -->
+        <div class="lobby-card">
+            <div class="lobby-header">
+                <div class="lobby-title">⚡ ₦50k Sprint Battle (₦100)</div>
+                <div class="counter-badge"><span id="count-100">0</span> Registered</div>
+            </div>
+            
+            <a href="https://paystack.shop/pay/4axl-x3e50" class="btn-pay" id="pay-btn-100">Pay ₦100 & Join Lobby</a>
+            <div class="btn-registered" id="paid-badge-100" style="display:none;">✅ Registered! Starts at 8:00 PM</div>
+
+            <div class="arena-action-box" id="timer-box-100">
+                <div class="countdown-text">Starts in: <span id="time-100">Loading...</span></div>
+            </div>
+
+            <a href="game.html?tier=10000" class="btn-play-game" id="play-btn-100" style="display:none;">🎮 Enter ₦100 Arena</a>
+        </div>
+    </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
     const activePhone = localStorage.getItem('user_phone');
     if (!activePhone) {
@@ -131,6 +182,134 @@
         localStorage.removeItem('user_phone');
         window.location.href = 'login.html';
     }
+
+    const SUPABASE_URL = 'https://eupaqmrilobhvmbpvpuw.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_PjtLrDn-bHNoz9hm5FM_yQ_LI8NUxrU';
+    const dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // 1. Process Paystack Return Redirects
+    const urlParams = new URLSearchParams(window.location.search);
+    const returnedTier = urlParams.get('tier');
+
+    if (urlParams.get('paid') === 'true' && returnedTier) {
+        localStorage.setItem(`paid_tier_${returnedTier}`, 'true');
+        
+        // Record participant in Supabase leads table
+        dbClient.from('leads').upsert([
+            { phone_number: activePhone, tier: returnedTier, is_active: true }
+        ]).then(() => {
+            // Clean up address bar parameters without reloading
+            window.history.replaceState({}, document.title, window.location.pathname);
+        });
+    }
+
+    // 2. Cross-device sync: Query Supabase to auto-unlock paid tiers
+    async function syncDatabasePaidStatus() {
+        if (!activePhone) return;
+        const { data: userLeads } = await dbClient
+            .from('leads')
+            .select('tier')
+            .eq('phone_number', activePhone)
+            .eq('is_active', true);
+
+        if (userLeads && userLeads.length > 0) {
+            userLeads.forEach(lead => {
+                localStorage.setItem(`paid_tier_${lead.tier}`, 'true');
+            });
+            updateStateEngine();
+        }
+    }
+
+    // 3. State & Timer Engine (Controls 3-step button changes per tier)
+    function updateStateEngine() {
+        const now = new Date();
+        const currentHour = now.getHours();
+
+        // Game active strictly between 8:00 PM (20:00) and 9:00 PM (21:00)
+        const isMatchActive = (currentHour >= 20 && currentHour < 21);
+
+        // Reset paid access automatically after 9 PM match concludes
+        if (currentHour >= 21) {
+            localStorage.removeItem('paid_tier_100000');
+            localStorage.removeItem('paid_tier_10000');
+        }
+
+        // Calculate 8:00 PM target
+        const target = new Date();
+        target.setHours(20, 0, 0, 0);
+        if (now.getTime() > target.getTime() && currentHour >= 21) {
+            target.setDate(target.getDate() + 1);
+        }
+
+        const distance = target.getTime() - now.getTime();
+        let timeFormatted = "LIVE NOW";
+
+        if (distance > 0 && !isMatchActive) {
+            const h = Math.floor((distance / (1000 * 60 * 60)) % 24).toString().padStart(2, '0');
+            const m = Math.floor((distance / (1000 * 60)) % 60).toString().padStart(2, '0');
+            const s = Math.floor((distance / 1000) % 60).toString().padStart(2, '0');
+            timeFormatted = `${h}:${m}:${s}`;
+        }
+
+        document.getElementById('time-1000').innerText = timeFormatted;
+        document.getElementById('time-100').innerText = timeFormatted;
+
+        // Tier Mappings
+        const tiers = [
+            { id: '1000', dbTier: '100000' },
+            { id: '100', dbTier: '10000' }
+        ];
+
+        tiers.forEach(t => {
+            const isPaid = localStorage.getItem(`paid_tier_${t.dbTier}`) === 'true';
+
+            const payBtn = document.getElementById(`pay-btn-${t.id}`);
+            const paidBadge = document.getElementById(`paid-badge-${t.id}`);
+            const playBtn = document.getElementById(`play-btn-${t.id}`);
+            const timerBox = document.getElementById(`timer-box-${t.id}`);
+
+            if (isMatchActive && isPaid) {
+                // STEP 3: PLAY GAME (8 PM - 9 PM)
+                payBtn.style.display = 'none';
+                paidBadge.style.display = 'none';
+                timerBox.style.display = 'none';
+                playBtn.style.display = 'block';
+            } else if (isPaid && !isMatchActive) {
+                // STEP 2: REGISTERED & WAITING FOR 8 PM
+                payBtn.style.display = 'none';
+                playBtn.style.display = 'none';
+                paidBadge.style.display = 'block';
+                timerBox.style.display = 'block';
+            } else {
+                // STEP 1: DEFAULT / UNPAID
+                paidBadge.style.display = 'none';
+                playBtn.style.display = 'none';
+                payBtn.style.display = 'block';
+                timerBox.style.display = 'block';
+            }
+        });
+    }
+
+    // 4. Load live active player counts
+    async function loadCounts() {
+        const { data: players } = await dbClient
+            .from('leads')
+            .select('*')
+            .eq('is_active', true);
+
+        if (players) {
+            document.getElementById('count-1000').innerText = players.filter(p => p.tier === '100000').length;
+            document.getElementById('count-100').innerText = players.filter(p => p.tier === '10000').length;
+        }
+    }
+
+    // Execution Loops
+    syncDatabasePaidStatus();
+    updateStateEngine();
+    loadCounts();
+
+    setInterval(updateStateEngine, 1000);
+    setInterval(loadCounts, 4000);
 </script>
 
 </body>
