@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - WhatsApp Survival</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --wa-bg: #0b141a;
+            --wa-card: #111b21;
+            --wa-header: #202c33;
+            --wa-text: #e9edef;
+            --wa-subtext: #8696a0;
+            --wa-green: #00a884;
+            --wa-divider: #222d34;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        body {
+            background-color: var(--wa-bg);
+            color: var(--wa-text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+            background: var(--wa-card);
+            border: 1px solid var(--wa-divider);
+            border-radius: 16px;
+            padding: 32px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            text-align: center;
+        }
+
+        .logo-icon { font-size: 48px; }
+        .title { font-size: 20px; font-weight: 700; color: var(--wa-text); }
+        .subtitle { font-size: 13px; color: var(--wa-subtext); line-height: 1.5; }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            text-align: left;
+        }
+
+        label { font-size: 12px; font-weight: 600; color: var(--wa-subtext); }
+
+        .phone-wrapper {
+            display: flex;
+            gap: 8px;
+        }
+
+        select {
+            background: var(--wa-header);
+            border: 1px solid var(--wa-divider);
+            border-radius: 10px;
+            padding: 14px 8px;
+            color: var(--wa-text);
+            font-size: 13px;
+            outline: none;
+            cursor: pointer;
+            width: 125px;
+            flex-shrink: 0;
+        }
+
+        input {
+            flex-grow: 1;
+            background: var(--wa-header);
+            border: 1px solid var(--wa-divider);
+            border-radius: 10px;
+            padding: 14px;
+            color: var(--wa-text);
+            font-size: 15px;
+            outline: none;
+            width: 100%;
+        }
+
+        select:focus, input:focus { border-color: var(--wa-green); }
+
+        .btn-submit {
+            background: var(--wa-green);
+            color: #000000;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-card">
+    <div class="logo-icon">🎮</div>
+    <div class="title">Whats Survival</div>
+    <div class="subtitle">Select your country code and enter your registered WhatsApp phone number to join the arena.</div>
+
+    <form onsubmit="handleLogin(event)" class="input-group">
+        <label for="phone">Phone Number</label>
+        <div class="phone-wrapper">
+            <select id="country-code">
+                <!-- POPULAR / AFRICA -->
+                <option value="234">🇳🇬 +234 (NG)</option>
+                <option value="1">🇺🇸 +1 (US/CA)</option>
+                <option value="44">🇬🇧 +44 (UK)</option>
+                <option value="233">🇬🇭 +233 (GH)</option>
+                <option value="254">🇰🇪 +254 (KE)</option>
+                <option value="27">🇿🇦 +27 (ZA)</option>
+                <option value="237">🇨🇲 +237 (CM)</option>
+                <option value="225">🇨🇮 +225 (CI)</option>
+                <option value="221">🇸🇳 +221 (SN)</option>
+                <option value="256">🇺🇬 +256 (UG)</option>
+                <option value="255">🇹🇿 +255 (TZ)</option>
+                <option value="251">🇪🇹 +251 (ET)</option>
+                <option value="20">🇪🇬 +20 (EG)</option>
+                <option value="260">🇿🇲 +260 (ZM)</option>
+                <option value="263">🇿🇼 +263 (ZW)</option>
+                <option value="250">🇷🇼 +250 (RW)</option>
+                <option value="229">🇧🇯 +229 (BJ)</option>
+                <option value="228">🇹🇬 +228 (TG)</option>
+                <!-- ASIA & MIDDLE EAST -->
+                <option value="91">🇮🇳 +91 (IN)</option>
+                <option value="92">🇵🇰 +92 (PK)</option>
+                <option value="880">🇧🇩 +880 (BD)</option>
+                <option value="971">🇦🇪 +971 (AE)</option>
+                <option value="966">🇸🇦 +966 (SA)</option>
+                <option value="974">🇶🇦 +974 (QA)</option>
+                <option value="86">🇨🇳 +86 (CN)</option>
+                <option value="63">🇵🇭 +63 (PH)</option>
+                <option value="60">🇲🇾 +60 (MY)</option>
+                <option value="62">🇮🇩 +62 (ID)</option>
+                <!-- EUROPE -->
+                <option value="49">🇩🇪 +49 (DE)</option>
+                <option value="33">🇫🇷 +33 (FR)</option>
+                <option value="39">🇮🇹 +39 (IT)</option>
+                <option value="34">🇪🇸 +34 (ES)</option>
+                <option value="31">🇳🇱 +31 (NL)</option>
+                <option value="351">🇵🇹 +351 (PT)</option>
+                <option value="90">🇹🇷 +90 (TR)</option>
+                <!-- AMERICAS & OCEANIA -->
+                <option value="52">🇲🇽 +52 (MX)</option>
+                <option value="55">🇧🇷 +55 (BR)</option>
+                <option value="57">🇨🇴 +57 (CO)</option>
+                <option value="61">🇦🇺 +61 (AU)</option>
+                <option value="64">🇳🇿 +64 (NZ)</option>
+            </select>
+            <input type="text" id="phone" placeholder="8123456789" required>
+        </div>
+        <button type="submit" class="btn-submit">Enter Survival Lobby</button>
+    </form>
+</div>
+
+<script>
+    if (localStorage.getItem('user_phone')) {
+        window.location.href = 'index.html';
+    }
+
+    function handleLogin(e) {
+        e.preventDefault();
+        const code = document.getElementById('country-code').value;
+        let phone = document.getElementById('phone').value.trim().replace(/[^0-9]/g, '');
+
+        if (phone.startsWith('0')) {
+            phone = phone.substring(1);
+        }
+
+        if (phone.length < 6) {
+            alert('Please enter a valid phone number.');
+            return;
+        }
+
+        const fullPhone = code + phone;
+        localStorage.setItem('user_phone', fullPhone);
+        window.location.href = 'index.html';
+    }
+</script>
+
+</body>
+</html>
