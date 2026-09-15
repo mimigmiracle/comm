@@ -42,16 +42,8 @@
             text-align: center;
         }
 
-        .payment-header h1 {
-            font-size: 22px;
-            font-weight: 800;
-            margin-bottom: 6px;
-        }
-
-        .payment-header p {
-            font-size: 13px;
-            color: var(--text-sub);
-        }
+        .payment-header h1 { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+        .payment-header p { font-size: 13px; color: var(--text-sub); }
 
         .info-card {
             background: #182229;
@@ -66,11 +58,7 @@
         .info-label { color: var(--text-sub); }
         .info-value { font-weight: 700; color: var(--accent-gold); }
 
-        .tier-options {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
+        .tier-options { display: flex; flex-direction: column; gap: 12px; }
 
         .btn-tier {
             width: 100%;
@@ -86,12 +74,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: all 0.2s ease;
-        }
-
-        .btn-tier:hover {
-            border-color: var(--accent-gold);
-            background: rgba(255, 215, 0, 0.08);
         }
 
         .tier-badge {
@@ -116,11 +98,7 @@
             margin-top: 10px;
         }
 
-        .status-msg {
-            font-size: 13px;
-            margin-top: 10px;
-            display: none;
-        }
+        .status-msg { font-size: 13px; margin-top: 10px; display: none; }
     </style>
 </head>
 <body>
@@ -128,7 +106,7 @@
 <div class="app-container">
     <div class="payment-header">
         <h1>⚔️ Whats Survival</h1>
-        <p>Select your preferred entry tier to unlock lobby access.</p>
+        <p>Select your entry tier to unlock lobby access.</p>
     </div>
 
     <div class="info-card">
@@ -138,13 +116,13 @@
 
     <div class="tier-options">
         <!-- Tier 1: NGN 100 -->
-        <a href="https://paystack.shop/pay/4axd-x3e50" class="btn-tier">
+        <a href="https://paystack.shop/pay/4axl-x3e50" class="btn-tier">
             <span>Standard Entry</span>
             <span class="tier-badge">₦100 💳</span>
         </a>
 
         <!-- Tier 2: NGN 1,000 -->
-        <a href="https://paystack.shop/pay/trr5o19oig" class="btn-tier">
+        <a href="https://paystack.shop/pay/trr5o190ig" class="btn-tier">
             <span>Premium Entry</span>
             <span class="tier-badge">₦1,000 💳</span>
         </a>
@@ -187,9 +165,9 @@
 
         if (data && data.is_active === true) {
             msg.style.color = 'var(--success)';
-            msg.innerText = 'Payment verified! Redirecting...';
+            msg.innerText = 'Payment verified! Redirecting to lobby...';
             setTimeout(() => {
-                window.location.href = 'index.html';
+                window.location.href = 'wait.html';
             }, 1000);
         } else {
             msg.style.color = 'var(--danger)';
