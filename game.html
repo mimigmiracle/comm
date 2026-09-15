@@ -2,448 +2,283 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WhatsApp Survival Arena</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Whats Survival | Live Elimination Arena</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --wa-bg: #0b141a;
-            --wa-card: #111b21;
-            --wa-header: #202c33;
-            --wa-text: #e9edef;
-            --wa-subtext: #8696a0;
-            --wa-green: #00a884;
-            --wa-red: #f15c6d;
-            --wa-divider: #222d34;
+            --bg-dark: #0b141a;
+            --card-bg: #111b21;
+            --accent-gold: #ffd700;
+            --text-main: #e9edef;
+            --text-sub: #8696a0;
+            --success: #00a884;
+            --danger: #f15c6d;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
 
         body {
-            background-color: var(--wa-bg);
-            color: var(--wa-text);
+            background-color: var(--bg-dark);
+            color: var(--text-main);
             min-height: 100vh;
             display: flex;
             justify-content: center;
+            align-items: center;
+            padding: 20px 10px;
         }
 
-        .wa-screen {
+        .app-container {
             width: 100%;
             max-width: 440px;
-            background: var(--wa-card);
-            min-height: 100vh;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .wa-top-bar {
-            background: var(--wa-header);
-            padding: 12px 16px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-
-        .back-btn { color: var(--wa-subtext); text-decoration: none; font-size: 20px; }
-        .group-name { font-size: 16px; font-weight: 600; color: var(--wa-text); }
-        .group-meta { font-size: 12px; color: var(--wa-subtext); }
-
-        .wa-tabs {
-            display: flex;
-            background: var(--wa-header);
-            border-bottom: 1px solid var(--wa-divider);
-        }
-
-        .wa-tab {
-            flex: 1;
-            text-align: center;
-            padding: 12px;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--wa-green);
-            border-bottom: 3px solid var(--wa-green);
-        }
-
-        .members-list {
-            display: flex;
-            flex-direction: column;
-            padding: 8px 0;
-        }
-
-        .member-item {
-            display: flex;
-            align-items: center;
-            padding: 12px 16px;
-            gap: 14px;
-            cursor: pointer;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-            transition: background 0.2s;
-        }
-
-        .member-item:active { background: #1f2c34; }
-
-        .avatar {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background: #6b7c85;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            color: #ffffff;
-            flex-shrink: 0;
-        }
-
-        .member-info { display: flex; flex-direction: column; flex-grow: 1; word-break: break-all; }
-        .member-phone { font-size: 14px; font-weight: 500; color: var(--wa-text); }
-
-        .winner-screen {
-            background: rgba(0, 168, 132, 0.08);
-            border: 2px solid var(--wa-green);
-            border-radius: 16px;
-            margin: 24px 16px;
-            padding: 24px 16px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .trophy-icon { font-size: 50px; }
-        .winner-title { color: var(--wa-green); font-weight: 800; font-size: 20px; }
-        .winner-phone { font-size: 15px; font-weight: 700; background: #1f2c34; padding: 12px; border-radius: 10px; width: 100%; border: 1px solid var(--wa-divider); word-break: break-all; }
-
-        .btn-claim {
-            background: var(--wa-green);
-            color: #000000;
-            text-decoration: none;
-            padding: 14px;
-            border-radius: 10px;
-            font-weight: 800;
-            font-size: 14px;
-            width: 100%;
-            display: block;
-            box-shadow: 0 4px 12px rgba(0, 168, 132, 0.3);
-        }
-
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.75);
-            display: none;
-            justify-content: flex-end;
-            flex-direction: column;
-            z-index: 100;
-        }
-
-        .sheet-card {
-            background: #1f2c34;
-            border-top-left-radius: 20px;
-            border-top-right-radius: 20px;
-            padding: 20px 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            animation: slideUp 0.2s ease-out;
-        }
-
-        @keyframes slideUp {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
-        }
-
-        .sheet-profile {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid var(--wa-divider);
-        }
-
-        .sheet-avatar {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: #e2a03f;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 30px;
-        }
-
-        .sheet-phone { font-size: 15px; font-weight: 700; color: var(--wa-text); word-break: break-all; text-align: center; }
-
-        .sheet-menu-item {
-            padding: 14px;
-            font-size: 15px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            cursor: pointer;
-            border-radius: 10px;
-            background: rgba(241, 92, 109, 0.1);
-            color: var(--wa-red);
-        }
-
-        .confirm-card {
-            background: #1f2c34;
-            border-top-left-radius: 20px;
-            border-top-right-radius: 20px;
-            padding: 24px 20px;
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
             display: flex;
             flex-direction: column;
             gap: 20px;
+            padding: 28px 20px;
+            text-align: center;
         }
 
-        .confirm-text { font-size: 15px; color: var(--wa-text); }
-        .confirm-btns { display: flex; justify-content: flex-end; gap: 16px; }
-        .confirm-btn { background: none; border: none; font-size: 14px; font-weight: 700; cursor: pointer; }
-        .btn-cancel { color: var(--wa-subtext); }
-        .btn-remove { color: var(--wa-red); }
+        .header h1 { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+        .header p { font-size: 13px; color: var(--text-sub); }
 
-        .toast {
-            position: fixed;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #202c33;
-            color: var(--wa-text);
-            padding: 12px 20px;
-            border-radius: 20px;
+        .stat-box {
+            background: #182229;
+            border: 1px dashed rgba(255, 215, 0, 0.3);
+            border-radius: 14px;
+            padding: 16px;
+        }
+
+        .stat-label { font-size: 12px; color: var(--text-sub); text-transform: uppercase; }
+        .stat-count { font-size: 32px; font-weight: 800; color: var(--accent-gold); margin-top: 4px; }
+
+        .btn-eliminate {
+            width: 100%;
+            padding: 22px;
+            border-radius: 16px;
+            font-weight: 800;
+            font-size: 18px;
+            background: linear-gradient(135deg, #f15c6d, #d9384a);
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(241, 92, 109, 0.4);
+            transition: transform 0.1s ease, background 0.2s ease;
+        }
+
+        .btn-eliminate:active { transform: scale(0.96); }
+        .btn-eliminate:disabled { 
+            background: #222d34; 
+            color: var(--text-sub); 
+            box-shadow: none; 
+            cursor: not-allowed; 
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .feed-box {
+            background: #182229;
+            border-radius: 12px;
+            padding: 12px;
             font-size: 13px;
-            font-weight: 600;
-            border: 1px solid var(--wa-divider);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
-            display: none;
-            z-index: 200;
-            text-align: center;
-            width: 85%;
-            max-width: 380px;
+            color: var(--text-sub);
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .result-screen { display: none; flex-direction: column; gap: 14px; }
+
+        .btn-claim {
+            width: 100%;
+            padding: 16px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 15px;
+            background: var(--success);
+            color: #fff;
+            text-decoration: none;
+            display: block;
+            box-shadow: 0 4px 15px rgba(0, 168, 132, 0.4);
+        }
+
+        .btn-restart {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            background: transparent;
+            color: var(--text-sub);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-<div class="wa-screen">
-    <div class="wa-top-bar">
-        <a href="index.html" class="back-btn">←</a>
-        <div>
-            <div class="group-name" id="arena-title">Whats Survival Lobby</div>
-            <div class="group-meta" id="member-count">0 members</div>
+<div class="app-container">
+    <div class="header">
+        <h1>⚔️ Whats Survival</h1>
+        <p>Tap button to eliminate rival players live!</p>
+    </div>
+
+    <!-- Active Game Area -->
+    <div id="game-active-area" style="display: flex; flex-direction: column; gap: 16px;">
+        <div class="stat-box">
+            <div class="stat-label">Players Remaining in Lobby</div>
+            <div class="stat-count" id="active-count">--</div>
+        </div>
+
+        <button class="btn-eliminate" id="btn-eliminate" onclick="eliminateRival()">
+            REMOVE A PLAYER ⚔️
+        </button>
+
+        <div class="feed-box" id="feed-msg">
+            Battle in progress... Stay quick on the button!
         </div>
     </div>
 
-    <div class="wa-tabs">
-        <div class="wa-tab">Members</div>
-    </div>
-
-    <div id="winner-container" style="display: none;"></div>
-
-    <div class="members-list" id="members-list">
-        <div style="color: var(--wa-subtext); padding: 20px; text-align: center; font-size: 13px;">Loading players...</div>
+    <!-- End Game Result Area -->
+    <div class="result-screen" id="result-screen">
+        <h2 id="result-title"></h2>
+        <p id="result-desc" style="font-size: 13px; color: var(--text-sub);"></p>
+        <a href="#" class="btn-claim" id="btn-claim" style="display: none;" target="_blank">
+            CLAIM PRIZE ON WHATSAPP 🏆
+        </a>
+        <button class="btn-restart" onclick="window.location.href='login.html'">
+            RETURN TO LOBBY 🔄
+        </button>
     </div>
 </div>
-
-<div class="modal-overlay" id="option-modal" onclick="closeModals(event)">
-    <div class="sheet-card" onclick="event.stopPropagation()">
-        <div class="sheet-profile">
-            <div class="sheet-avatar">👤</div>
-            <div class="sheet-phone" id="modal-phone">+234 ...</div>
-        </div>
-
-        <div class="sheet-menu-item" onclick="openConfirmModal()">
-            ⛔ Remove from group
-        </div>
-    </div>
-</div>
-
-<div class="modal-overlay" id="confirm-modal" onclick="closeModals(event)">
-    <div class="confirm-card" onclick="event.stopPropagation()">
-        <div class="confirm-text" id="confirm-text">Remove player from group?</div>
-        <div class="confirm-btns">
-            <button class="confirm-btn btn-cancel" onclick="closeConfirmModal()">Cancel</button>
-            <button class="confirm-btn btn-remove" onclick="executeRemoval()">Remove</button>
-        </div>
-    </div>
-</div>
-
-<div class="toast" id="toast-msg">Notification</div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-    const activePhone = localStorage.getItem('user_phone');
-    if (!activePhone) {
-        window.location.href = 'login.html';
-    }
-
     const SUPABASE_URL = 'https://eupaqmrilobhvmbpvpuw.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_PjtLrDn-bHNoz9hm5FM_yQ_LI8NUxrU';
     const dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const WHATSAPP_NUMBER = "2348124427349";
+    const userPhone = localStorage.getItem('user_phone') || '';
+    let isBusy = false;
+    let matchOver = false;
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const currentTier = urlParams.get('tier') || '10000';
+    // Sync Game State with Database
+    async function syncGameState() {
+        if (matchOver || !userPhone) return;
 
-    let selectedPlayerId = null;
-    let selectedPlayerPhone = '';
-    let cooldownEndTime = 0; 
-    let isCurrentUserAlive = true; 
-
-    const tierName = currentTier === '100000' ? '₦500k Grand Battle' : '₦50k Sprint Battle';
-    document.getElementById('arena-title').innerText = `Whats Survival (${tierName})`;
-
-    async function fetchPlayers() {
-        const { data: players, error } = await dbClient
+        const { data: activePlayers } = await dbClient
             .from('leads')
-            .select('*')
-            .eq('tier', currentTier)
+            .select('phone_number')
             .eq('is_active', true);
 
-        if (error || !players) return;
+        if (!activePlayers) return;
 
-        renderArena(players);
-    }
+        const count = activePlayers.length;
+        document.getElementById('active-count').innerText = count;
 
-    function renderArena(players) {
-        const listDiv = document.getElementById('members-list');
-        const countMeta = document.getElementById('member-count');
-        const winnerDiv = document.getElementById('winner-container');
+        const amIStillActive = activePlayers.some(p => p.phone_number === userPhone);
 
-        countMeta.innerText = `${players.length} members`;
-
-        isCurrentUserAlive = players.some(p => String(p.phone_number) === String(activePhone));
-
-        if (players.length === 1) {
-            const winner = players[0];
-            const winnerPhone = winner.phone_number || `Player #${winner.id}`;
-            const isWinner = String(activePhone) === String(winnerPhone);
-
-            listDiv.style.display = 'none';
-            winnerDiv.style.display = 'block';
-
-            if (isWinner) {
-                const msg = encodeURIComponent(`Hello Admin! I won the ${tierName} on Whats Survival. My registered number is +${winnerPhone}. Please issue my prize money!`);
-                winnerDiv.innerHTML = `
-                    <div class="winner-screen">
-                        <div class="trophy-icon">🏆</div>
-                        <div class="winner-title">YOU WON!</div>
-                        <div style="font-size: 13px; color: var(--wa-subtext);">You are the last remaining survivor:</div>
-                        <div class="winner-phone">👑 +${winnerPhone}</div>
-                        <div style="font-size: 12px; color: var(--wa-subtext); line-height: 1.5;">
-                            Congratulations! Message the admin on WhatsApp to receive your cash reward.
-                        </div>
-                        <a href="https://wa.me/${WHATSAPP_NUMBER}?text=${msg}" target="_blank" class="btn-claim">
-                            💬 Message Admin (+${WHATSAPP_NUMBER}) to Get Paid
-                        </a>
-                    </div>
-                `;
-            } else {
-                winnerDiv.innerHTML = `
-                    <div class="winner-screen" style="border-color: var(--wa-divider); background: rgba(255, 255, 255, 0.03);">
-                        <div class="trophy-icon">🎮</div>
-                        <div class="winner-title" style="color: var(--wa-text);">MATCH COMPLETED</div>
-                        <div style="font-size: 13px; color: var(--wa-subtext);">The last remaining survivor was:</div>
-                        <div class="winner-phone">👑 +${winnerPhone}</div>
-                        <div style="font-size: 12px; color: var(--wa-subtext); line-height: 1.5; margin-top: 8px;">
-                            This match has concluded. Only the winner has access to claim the reward.
-                        </div>
-                    </div>
-                `;
-            }
+        // RULE 1: If eliminated by someone else, block immediately
+        if (!amIStillActive) {
+            endMatch(false);
             return;
         }
 
-        listDiv.style.display = 'flex';
-        winnerDiv.style.display = 'none';
-        listDiv.innerHTML = '';
-
-        if (players.length === 0) {
-            listDiv.innerHTML = '<div style="color: var(--wa-subtext); padding: 20px; text-align: center; font-size: 13px;">No active players currently in this group lobby.</div>';
-            return;
+        // RULE 3: If only 1 player remains and it's you, trigger victory screen
+        if (count === 1 && amIStillActive) {
+            endMatch(true);
         }
-
-        players.forEach(player => {
-            const phoneStr = player.phone_number || `Player #${player.id}`;
-            const item = document.createElement('div');
-            item.className = 'member-item';
-            item.onclick = () => openOptionModal(player.id, phoneStr);
-            item.innerHTML = `
-                <div class="avatar">👤</div>
-                <div class="member-info">
-                    <div class="member-phone">+${phoneStr}</div>
-                </div>
-            `;
-            listDiv.appendChild(item);
-        });
     }
 
-    function openOptionModal(id, phone) {
-        if (!isCurrentUserAlive) {
-            showToast("❌ You have already been eliminated from the group! All you can do is wait for the game to end.");
-            return;
-        }
+    // "REMOVE A PLAYER" Action
+    async function eliminateRival() {
+        if (isBusy || matchOver) return;
 
-        const now = Date.now();
-        if (now < cooldownEndTime) {
-            const secondsLeft = Math.ceil((cooldownEndTime - now) / 1000);
-            showToast(`⏳ Cooldown active! Wait ${secondsLeft}s before removing another player.`);
-            return;
-        }
-
-        selectedPlayerId = id;
-        selectedPlayerPhone = phone;
-        document.getElementById('modal-phone').innerText = `+${phone}`;
-        document.getElementById('option-modal').style.display = 'flex';
-    }
-
-    function openConfirmModal() {
-        document.getElementById('option-modal').style.display = 'none';
-        document.getElementById('confirm-text').innerText = `Remove +${selectedPlayerPhone} from this group?`;
-        document.getElementById('confirm-modal').style.display = 'flex';
-    }
-
-    function closeConfirmModal() {
-        document.getElementById('confirm-modal').style.display = 'none';
-    }
-
-    function closeModals(e) {
-        document.getElementById('option-modal').style.display = 'none';
-        document.getElementById('confirm-modal').style.display = 'none';
-    }
-
-    async function executeRemoval() {
-        closeConfirmModal();
-
-        cooldownEndTime = Date.now() + 3000;
-
-        await dbClient
+        // Double check active status before allowing removal action
+        const { data: selfStatus } = await dbClient
             .from('leads')
-            .update({ is_active: false })
-            .eq('id', selectedPlayerId);
+            .select('is_active')
+            .eq('phone_number', userPhone)
+            .maybeSingle();
 
-        showToast(`+${selectedPlayerPhone} was removed from the group.`);
-        fetchPlayers();
+        if (!selfStatus || selfStatus.is_active !== true) {
+            endMatch(false);
+            return;
+        }
+
+        isBusy = true;
+        const btn = document.getElementById('btn-eliminate');
+        const feed = document.getElementById('feed-msg');
+
+        // Fetch opponents remaining
+        const { data: opponents } = await dbClient
+            .from('leads')
+            .select('phone_number')
+            .eq('is_active', true)
+            .neq('phone_number', userPhone);
+
+        if (opponents && opponents.length > 0) {
+            const target = opponents[Math.floor(Math.random() * opponents.length)];
+
+            await dbClient
+                .from('leads')
+                .update({ is_active: false })
+                .eq('phone_number', target.phone_number);
+
+            const maskedTarget = target.phone_number.slice(0, 5) + '***' + target.phone_number.slice(-2);
+            feed.innerText = `⚔️ You knocked out +${maskedTarget}!`;
+        } else {
+            feed.innerText = "No active rivals remaining!";
+        }
+
+        // RULE 2: Start 3-Second Cooldown Timer
+        let cooldownSeconds = 3;
+        btn.disabled = true;
+        btn.innerText = `WAIT (${cooldownSeconds}s)... ⏳`;
+
+        const cooldownInterval = setInterval(() => {
+            cooldownSeconds--;
+            if (cooldownSeconds > 0) {
+                btn.innerText = `WAIT (${cooldownSeconds}s)... ⏳`;
+            } else {
+                clearInterval(cooldownInterval);
+                btn.disabled = false;
+                btn.innerText = "REMOVE A PLAYER ⚔️";
+                isBusy = false;
+                syncGameState();
+            }
+        }, 1000);
     }
 
-    function showToast(text) {
-        const toast = document.getElementById('toast-msg');
-        toast.innerText = text;
-        toast.style.display = 'block';
-        setTimeout(() => { toast.style.display = 'none'; }, 3500);
+    function endMatch(isWinner) {
+        matchOver = true;
+        document.getElementById('game-active-area').style.display = 'none';
+
+        const screen = document.getElementById('result-screen');
+        const title = document.getElementById('result-title');
+        const desc = document.getElementById('result-desc');
+        const claimBtn = document.getElementById('btn-claim');
+
+        screen.style.display = 'flex';
+
+        if (isWinner) {
+            title.innerText = "🏆 VICTORY! YOU SURVIVED";
+            title.style.color = "var(--accent-gold)";
+            desc.innerText = "You are the last survivor standing in the lobby!";
+            claimBtn.style.display = "block";
+            claimBtn.href = `https://wa.me/2348124427349?text=Hello%20Admin,%20I%20won%20the%20Whats%20Survival%20match!%20My%20Phone:%20%2B${userPhone}`;
+        } else {
+            title.innerText = "💀 YOU WERE REMOVED";
+            title.style.color = "var(--danger)";
+            desc.innerText = "You were knocked out of the lobby and cannot remove anyone else.";
+        }
     }
 
-    fetchPlayers();
-    setInterval(fetchPlayers, 3000);
+    syncGameState();
+    setInterval(syncGameState, 1500);
 </script>
 
 </body>
