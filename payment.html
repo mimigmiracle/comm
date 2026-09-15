@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Whats Survival | Choose Tier & Pay</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0b141a;
+            --card-bg: #111b21;
+            --accent-gold: #ffd700;
+            --text-main: #e9edef;
+            --text-sub: #8696a0;
+            --success: #00a884;
+            --danger: #f15c6d;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 10px;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 440px;
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 28px 20px;
+            text-align: center;
+        }
+
+        .payment-header h1 {
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .payment-header p {
+            font-size: 13px;
+            color: var(--text-sub);
+        }
+
+        .info-card {
+            background: #182229;
+            border: 1px dashed rgba(255, 215, 0, 0.3);
+            border-radius: 12px;
+            padding: 14px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+        }
+
+        .info-label { color: var(--text-sub); }
+        .info-value { font-weight: 700; color: var(--accent-gold); }
+
+        .tier-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn-tier {
+            width: 100%;
+            padding: 16px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 15px;
+            background: #182229;
+            color: var(--text-main);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .btn-tier:hover {
+            border-color: var(--accent-gold);
+            background: rgba(255, 215, 0, 0.08);
+        }
+
+        .tier-badge {
+            background: linear-gradient(135deg, #ffd700, #cca600);
+            color: #000;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .btn-verify {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 14px;
+            background: transparent;
+            color: var(--text-sub);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .status-msg {
+            font-size: 13px;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="payment-header">
+        <h1>⚔️ Whats Survival</h1>
+        <p>Select your preferred entry tier to unlock lobby access.</p>
+    </div>
+
+    <div class="info-card">
+        <span class="info-label">Account Phone:</span>
+        <span class="info-value" id="user-phone-display">Loading...</span>
+    </div>
+
+    <div class="tier-options">
+        <!-- Tier 1: NGN 100 -->
+        <a href="https://paystack.shop/pay/4axd-x3e50" class="btn-tier">
+            <span>Standard Entry</span>
+            <span class="tier-badge">₦100 💳</span>
+        </a>
+
+        <!-- Tier 2: NGN 1,000 -->
+        <a href="https://paystack.shop/pay/trr5o19oig" class="btn-tier">
+            <span>Premium Entry</span>
+            <span class="tier-badge">₦1,000 💳</span>
+        </a>
+    </div>
+
+    <div>
+        <button class="btn-verify" onclick="verifyPayment()">
+            I've Completed Payment 🔄
+        </button>
+        <p class="status-msg" id="status-msg"></p>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+    const SUPABASE_URL = 'https://eupaqmrilobhvmbpvpuw.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_PjtLrDn-bHNoz9hm5FM_yQ_LI8NUxrU';
+    const dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const userPhone = localStorage.getItem('user_phone') || '';
+    document.getElementById('user-phone-display').innerText = userPhone ? `+${userPhone}` : 'Not found';
+
+    async function verifyPayment() {
+        const msg = document.getElementById('status-msg');
+        msg.style.display = 'block';
+        msg.style.color = 'var(--accent-gold)';
+        msg.innerText = 'Checking payment status...';
+
+        if (!userPhone) {
+            msg.style.color = 'var(--danger)';
+            msg.innerText = 'Phone number missing. Please return to login.';
+            return;
+        }
+
+        const { data } = await dbClient
+            .from('leads')
+            .select('is_active')
+            .eq('phone_number', userPhone)
+            .maybeSingle();
+
+        if (data && data.is_active === true) {
+            msg.style.color = 'var(--success)';
+            msg.innerText = 'Payment verified! Redirecting...';
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1000);
+        } else {
+            msg.style.color = 'var(--danger)';
+            msg.innerText = 'Payment not found yet. Please complete checkout or try again shortly.';
+        }
+    }
+</script>
+
+</body>
+</html>
