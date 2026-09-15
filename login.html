@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Whats Survival | Login</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -34,12 +34,13 @@
             background: var(--card-bg);
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 20px;
-            overflow: hidden;
+            /* Removed overflow: hidden so dropdown is never cut off */
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
             display: flex;
             flex-direction: column;
             gap: 20px;
             padding: 24px 20px;
+            position: relative;
         }
 
         .login-header {
@@ -71,11 +72,11 @@
             position: relative;
         }
 
-        /* Custom Searchable Select Styling */
         .country-picker {
             position: relative;
         }
 
+        /* Set to 16px font-size to prevent iPhone auto-zoom */
         .country-btn {
             width: 125px;
             padding: 14px 10px;
@@ -83,7 +84,7 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 10px;
             color: var(--text-main);
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             display: flex;
@@ -97,6 +98,7 @@
             border-color: var(--accent-gold);
         }
 
+        /* Dropdown positioning & high z-index */
         .country-dropdown {
             display: none;
             position: absolute;
@@ -104,10 +106,10 @@
             left: 0;
             width: 280px;
             background: #182229;
-            border: 1px solid rgba(255, 215, 0, 0.3);
+            border: 1px solid rgba(255, 215, 0, 0.4);
             border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-            z-index: 999;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.9);
+            z-index: 9999;
             flex-direction: column;
             overflow: hidden;
         }
@@ -122,6 +124,7 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
+        /* 16px font-size prevents iOS zoom when typing search */
         .country-search-box input {
             width: 100%;
             padding: 10px 12px;
@@ -129,7 +132,7 @@
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 8px;
             color: var(--text-main);
-            font-size: 13px;
+            font-size: 16px;
             outline: none;
         }
 
@@ -138,7 +141,7 @@
         }
 
         .country-list {
-            max-height: 220px;
+            max-height: 200px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
@@ -149,7 +152,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            font-size: 13px;
+            font-size: 14px;
             cursor: pointer;
             color: var(--text-main);
             border-bottom: 1px solid rgba(255, 255, 255, 0.03);
@@ -172,6 +175,7 @@
             font-weight: 700;
         }
 
+        /* 16px font-size prevents iOS zoom on phone field */
         input[type="tel"] {
             flex: 1;
             padding: 14px;
@@ -179,7 +183,7 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 10px;
             color: var(--text-main);
-            font-size: 15px;
+            font-size: 16px;
             outline: none;
         }
 
@@ -192,7 +196,7 @@
             padding: 14px;
             border-radius: 10px;
             font-weight: 800;
-            font-size: 14px;
+            font-size: 15px;
             background: linear-gradient(135deg, #ffd700, #cca600);
             color: #000000;
             border: none;
@@ -220,7 +224,6 @@
             <label for="phone">Phone Number</label>
             <div class="phone-input-wrapper">
                 
-                <!-- Custom Searchable Dropdown -->
                 <div class="country-picker">
                     <button type="button" class="country-btn" id="country-btn" onclick="toggleDropdown()">
                         <span id="selected-country-text">🇳🇬 +234</span>
@@ -239,7 +242,7 @@
                 <input type="tel" id="phone" placeholder="801 234 5678" required />
             </div>
         </div>
-        <button type="submit" class="btn-login" id="submit-btn">Continue to Lobbies 🚀</button>
+        <button type="submit" class="btn-login" id="submit-btn">Pay Entry Fee 💳</button>
     </form>
 </div>
 
@@ -461,7 +464,7 @@
         if (dropdown.classList.contains('show')) {
             searchInput.value = '';
             renderCountries(countries);
-            searchInput.focus();
+            setTimeout(() => searchInput.focus(), 100);
         }
     }
 
@@ -477,15 +480,14 @@
         document.getElementById('country-code').value = c.code;
         document.getElementById('selected-country-text').innerText = `${c.flag} +${c.code}`;
         
-        const dropdown = document.getElementById('country-dropdown');
-        const btn = document.getElementById('country-btn');
-        dropdown.classList.remove('show');
-        btn.classList.remove('active');
+        document.getElementById('country-dropdown').classList.remove('show');
+        document.getElementById('country-btn').classList.remove('active');
 
+        // Re-check payment status when country changes
+        checkPaymentStatus();
         document.getElementById('phone').focus();
     }
 
-    // Close dropdown on outside click
     document.addEventListener('click', (e) => {
         const picker = document.querySelector('.country-picker');
         if (!picker.contains(e.target)) {
@@ -494,29 +496,61 @@
         }
     });
 
-    // Initial render
     renderCountries(countries);
 
-    // Supabase & Authentication logic
+    // --- SUPABASE & AUTOMATIC PAYMENT CHECKING LOGIC ---
     const SUPABASE_URL = 'https://eupaqmrilobhvmbpvpuw.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_PjtLrDn-bHNoz9hm5FM_yQ_LI8NUxrU';
     const dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    let isPaidUser = false;
 
     if (localStorage.getItem('user_phone')) {
         window.location.href = 'index.html';
     }
 
+    async function checkPaymentStatus() {
+        const countryCode = document.getElementById('country-code').value;
+        let phoneInput = document.getElementById('phone').value.trim().replace(/\D/g, '');
+
+        if (phoneInput.startsWith('0')) phoneInput = phoneInput.substring(1);
+
+        const submitBtn = document.getElementById('submit-btn');
+
+        if (phoneInput.length >= 7) {
+            const fullPhone = countryCode + phoneInput;
+            
+            try {
+                const { data } = await dbClient
+                    .from('leads')
+                    .select('is_active')
+                    .eq('phone_number', fullPhone)
+                    .maybeSingle();
+
+                if (data && data.is_active === true) {
+                    isPaidUser = true;
+                    submitBtn.innerText = 'Enter Lobbies 🚀';
+                    submitBtn.style.background = 'linear-gradient(135deg, #00a884, #008f70)';
+                } else {
+                    isPaidUser = false;
+                    submitBtn.innerText = 'Pay Entry Fee to Access 💳';
+                    submitBtn.style.background = 'linear-gradient(135deg, #ffd700, #cca600)';
+                }
+            } catch (err) {
+                console.error("Supabase check error:", err);
+            }
+        }
+    }
+
+    document.getElementById('phone').addEventListener('input', checkPaymentStatus);
+
     async function handleLogin(e) {
         e.preventDefault();
         const submitBtn = document.getElementById('submit-btn');
         const countryCode = document.getElementById('country-code').value;
-        let phoneInput = document.getElementById('phone').value.trim();
+        let phoneInput = document.getElementById('phone').value.trim().replace(/\D/g, '');
 
-        phoneInput = phoneInput.replace(/\D/g, '');
-
-        if (phoneInput.startsWith('0')) {
-            phoneInput = phoneInput.substring(1);
-        }
+        if (phoneInput.startsWith('0')) phoneInput = phoneInput.substring(1);
 
         if (phoneInput.length < 7) {
             alert('Please enter a valid phone number');
@@ -524,25 +558,18 @@
         }
 
         const fullPhone = countryCode + phoneInput;
-
         submitBtn.disabled = true;
-        submitBtn.innerText = 'Connecting...';
 
-        try {
+        if (isPaidUser) {
+            localStorage.setItem('user_phone', fullPhone);
+            window.location.href = 'index.html';
+        } else {
             await dbClient.from('leads').upsert([
-                {
-                    phone_number: fullPhone,
-                    is_active: false,
-                    payment_reference: null
-                }
+                { phone_number: fullPhone, is_active: false }
             ], { onConflict: 'phone_number' });
 
             localStorage.setItem('user_phone', fullPhone);
-            window.location.href = 'index.html';
-        } catch (err) {
-            console.error('Login error:', err);
-            localStorage.setItem('user_phone', fullPhone);
-            window.location.href = 'index.html';
+            window.location.href = 'payment.html'; // Change to your Paystack/Payment link
         }
     }
 </script>
