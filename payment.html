@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Whats Survival | Choose Tier & Pay</title>
+    <title>Whats Survival | How to Play & Join</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -14,6 +14,7 @@
             --text-sub: #8696a0;
             --success: #00a884;
             --danger: #f15c6d;
+            --wa-green: #25D366;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -38,143 +39,200 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
-            padding: 28px 20px;
-            text-align: center;
+            padding: 24px 18px;
         }
 
-        .payment-header h1 { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
-        .payment-header p { font-size: 13px; color: var(--text-sub); }
+        .header { text-align: center; }
+        .header h1 { font-size: 24px; font-weight: 800; margin-bottom: 4px; }
+        .header p { font-size: 13px; color: var(--accent-gold); font-weight: 600; }
 
-        .info-card {
+        .rules-card {
             background: #182229;
-            border: 1px dashed rgba(255, 215, 0, 0.3);
-            border-radius: 12px;
-            padding: 14px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 14px;
+            padding: 16px;
             display: flex;
-            justify-content: space-between;
-            font-size: 14px;
+            flex-direction: column;
+            gap: 14px;
+            text-align: left;
         }
 
-        .info-label { color: var(--text-sub); }
-        .info-value { font-weight: 700; color: var(--accent-gold); }
+        .section-title {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--accent-gold);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
 
-        .tier-options { display: flex; flex-direction: column; gap: 12px; }
+        .rules-card ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
 
-        .btn-tier {
+        .rules-card li {
+            font-size: 13px;
+            color: var(--text-main);
+            line-height: 1.4;
+            position: relative;
+            padding-left: 18px;
+        }
+
+        .rules-card li::before {
+            content: "•";
+            position: absolute;
+            left: 4px;
+            color: var(--accent-gold);
+            font-weight: bold;
+        }
+
+        .tier-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn-payment {
             width: 100%;
             padding: 16px;
             border-radius: 12px;
-            font-weight: 800;
-            font-size: 15px;
             background: #182229;
-            color: var(--text-main);
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            cursor: pointer;
+            border: 1px solid rgba(255, 215, 0, 0.4);
             text-decoration: none;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: transform 0.1s ease, border-color 0.2s ease;
         }
 
-        .tier-badge {
+        .btn-payment:active { transform: scale(0.98); }
+
+        .tier-info {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .tier-title {
+            font-weight: 800;
+            font-size: 15px;
+            color: var(--text-main);
+        }
+
+        .tier-prize {
+            font-size: 13px;
+            color: var(--accent-gold);
+            font-weight: 700;
+            margin-top: 2px;
+        }
+
+        .price-badge {
             background: linear-gradient(135deg, #ffd700, #cca600);
             color: #000;
-            padding: 6px 12px;
+            padding: 8px 14px;
             border-radius: 8px;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 800;
         }
 
-        .btn-verify {
+        .btn-whatsapp {
             width: 100%;
-            padding: 12px;
-            border-radius: 10px;
+            padding: 14px;
+            border-radius: 12px;
             font-weight: 700;
-            font-size: 14px;
-            background: transparent;
-            color: var(--text-sub);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            cursor: pointer;
-            margin-top: 10px;
+            font-size: 13px;
+            background: rgba(37, 211, 102, 0.15);
+            color: var(--wa-green);
+            border: 1px solid rgba(37, 211, 102, 0.4);
+            text-decoration: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.1s ease, background 0.2s ease;
         }
 
-        .status-msg { font-size: 13px; margin-top: 10px; display: none; }
+        .btn-whatsapp:active { transform: scale(0.98); background: rgba(37, 211, 102, 0.25); }
+
+        .footer-note {
+            text-align: center;
+            font-size: 11px;
+            color: var(--text-sub);
+            line-height: 1.4;
+        }
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    <div class="payment-header">
-        <h1>⚔️ Whats Survival</h1>
-        <p>Select your entry tier to unlock lobby access.</p>
+    <div class="header">
+        <h1>🎮 HOW TO PLAY WHATS SURVIVAL ⚔️</h1>
+        <p>The ultimate live elimination battle. Last player standing wins the cash prize! 🏆</p>
     </div>
 
-    <div class="info-card">
-        <span class="info-label">Account Phone:</span>
-        <span class="info-value" id="user-phone-display">Loading...</span>
+    <!-- Explanation Box -->
+    <div class="rules-card">
+        <div>
+            <div class="section-title">📥 STEP 1: JOIN THE LOBBY</div>
+            <ul>
+                <li>Choose your entry tier (₦100 or ₦1,000) and pay securely via Paystack.</li>
+                <li>Once paid, you’ll be granted instant access to the Live Elimination Arena.</li>
+            </ul>
+        </div>
+
+        <div>
+            <div class="section-title">⚔️ STEP 2: BATTLE & SURVIVE</div>
+            <ul>
+                <li><strong>Tap to Attack:</strong> Click the "REMOVE" button to instantly knock a rival player out of the group.</li>
+                <li><strong>💀 Sudden Death:</strong> If another player removes you first, you are immediately knocked out. Once eliminated, you cannot remove anyone else!</li>
+            </ul>
+        </div>
+
+        <div>
+            <div class="section-title">🏆 STEP 3: WIN THE PRIZE</div>
+            <ul>
+                <li>Keep knocking out rivals until the Players Remaining counter hits 1.</li>
+                <li>If you are the last survivor standing, you win the cash prize (₦50,000 for ₦100 tier / ₦500,000 for ₦1,000 tier)!</li>
+            </ul>
+        </div>
     </div>
 
-    <div class="tier-options">
-        <!-- Tier 1: NGN 100 -->
-        <a href="https://paystack.shop/pay/4axl-x3e50" class="btn-tier">
-            <span>Standard Entry</span>
-            <span class="tier-badge">₦100 💳</span>
+    <!-- Payment Buttons -->
+    <div class="tier-container">
+        <!-- ₦100 Entry Tier -->
+        <a href="https://paystack.shop/pay/4axl-x3e50" class="btn-payment" target="_blank">
+            <div class="tier-info">
+                <span class="tier-title">Standard Entry</span>
+                <span class="tier-prize">🏆 Win ₦50,000</span>
+            </div>
+            <span class="price-badge">₦100 💳</span>
         </a>
 
-        <!-- Tier 2: NGN 1,000 -->
-        <a href="https://paystack.shop/pay/trr5o190ig" class="btn-tier">
-            <span>Premium Entry</span>
-            <span class="tier-badge">₦1,000 💳</span>
+        <!-- ₦1,000 Entry Tier -->
+        <a href="https://paystack.shop/pay/trr5o190ig" class="btn-payment" target="_blank">
+            <div class="tier-info">
+                <span class="tier-title">Premium Entry</span>
+                <span class="tier-prize">🏆 Win ₦500,000</span>
+            </div>
+            <span class="price-badge">₦1,000 💳</span>
         </a>
     </div>
 
-    <div>
-        <button class="btn-verify" onclick="verifyPayment()">
-            I've Completed Payment 🔄
-        </button>
-        <p class="status-msg" id="status-msg"></p>
+    <!-- WhatsApp Support Button -->
+    <a href="https://wa.me/2348124427349?text=Hello%20i%20have%20made%20my%20payment%20but%20i%20have%20not%20been%20added%20to%20the%20group" class="btn-whatsapp" target="_blank">
+        💬 Paid but not added? Contact Support on WhatsApp
+    </a>
+
+    <div class="footer-note">
+        🔒 Payments are processed securely via Paystack. You will be redirected to the match group immediately after payment.
     </div>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-    const SUPABASE_URL = 'https://eupaqmrilobhvmbpvpuw.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_PjtLrDn-bHNoz9hm5FM_yQ_LI8NUxrU';
-    const dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    const userPhone = localStorage.getItem('user_phone') || '';
-    document.getElementById('user-phone-display').innerText = userPhone ? `+${userPhone}` : 'Not found';
-
-    async function verifyPayment() {
-        const msg = document.getElementById('status-msg');
-        msg.style.display = 'block';
-        msg.style.color = 'var(--accent-gold)';
-        msg.innerText = 'Checking payment status...';
-
-        if (!userPhone) {
-            msg.style.color = 'var(--danger)';
-            msg.innerText = 'Phone number missing. Please return to login.';
-            return;
-        }
-
-        const { data } = await dbClient
-            .from('leads')
-            .select('is_active')
-            .eq('phone_number', userPhone)
-            .maybeSingle();
-
-        if (data && data.is_active === true) {
-            msg.style.color = 'var(--success)';
-            msg.innerText = 'Payment verified! Redirecting to lobby...';
-            setTimeout(() => {
-                window.location.href = 'wait.html';
-            }, 1000);
-        } else {
-            msg.style.color = 'var(--danger)';
-            msg.innerText = 'Payment not found yet. Please complete checkout or try again shortly.';
-        }
-    }
-</script>
 
 </body>
 </html>
